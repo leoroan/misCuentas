@@ -312,4 +312,12 @@ template {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+.col {
+  border: 2px solid blueviolet !important;
+}
+
+.row {
+  border: 2px solid rgb(43, 255, 0) !important;
 }/*# sourceMappingURL=style.css.map */
