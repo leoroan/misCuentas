@@ -1,16 +1,11 @@
+@import "_vars.scss";
 @import "_normalize.scss";
+@import "_background.scss";
+@import "_header.scss";
+@import "_footer.scss";
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-
-.col {
-  border: 2px solid blueviolet !important;  
-}
-
-.row {
-  border: 2px solid rgb(43, 255, 0) !important;  
 }
