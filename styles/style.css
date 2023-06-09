@@ -308,6 +308,12 @@ template {
   display: none;
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background: linear-gradient(-45deg, #D9ED92, #B5E48C, #99D98C, #76C893, #52B69A, #34A0A4, #168AAD, #1A759F, #1E6091, #184E77);
   background-size: 400% 400%;
@@ -329,13 +335,12 @@ body {
 header {
   margin: 15px 0 15px 0;
 }
+header h1 {
+  font-weight: bolder;
+  color: red !important;
+  font-size: 2.5rem !important;
+}
 
 footer {
   margin: 10px 0 10px 0;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }/*# sourceMappingURL=style.css.map */
