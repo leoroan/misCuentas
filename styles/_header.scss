@@ -1,10 +1,10 @@
 header {
   margin: 15px 0 15px 0;
 
-  h1 {
-    font-weight: bolder;
-    color: red !important;
-    font-size: 2.5rem !important;
+  .fw-light {
+    font-weight: 300 !important;
+    font-size: 5rem !important;
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8) !important;
   }
 
 }
