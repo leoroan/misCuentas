@@ -55,12 +55,10 @@ function calcularRetornoInteresCto(monto, tasa, cantMeses) {
 
 // MAIN
 if (puedeContinuar(nameUser)) {
-  if (true) {
-    alert(saludo(nameUser));
-    console.log("Lets start!");
-    if (aInvertir()) {
-      alert(`A los ${cantidadMeses} meses, invirtiendo: ${cantidadInvertida}$, vas a recibir: ${totalRetorno}$ en intereses!😁, un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
-    }
+  alert(saludo(nameUser));
+  console.log("Lets start!");
+  if (aInvertir()) {
+    alert(`A los ${cantidadMeses} meses, invirtiendo: ${cantidadInvertida}$, vas a recibir: ${totalRetorno}$ en intereses!😁, un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
   }
 } else {
   alert("Que lastima que no queres aprender a invetir?? 😫");
