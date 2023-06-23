@@ -22,5 +22,5 @@ La mecánica sería:
 
   V1.101:
   - Estadistica
-  - Cuan bien estas, cuan mal... comparado con un stard PRE-definido. 
+  - Cuan bien estas, cuan mal... comparado con un estandar PRE-definido. 
   - para un feedBack de tu SALUD ECONÓMICA.
