@@ -21,7 +21,7 @@ if (!puedeContinuar(usuario.nombre)) {
       intentos = intentos - 1;
     }
   } catch (error) {
-    alert("Canceló el ingreso de su nombre, F5 para recargar");
+    alert("Canceló el ingreso de su nombre, [F5] para recargar");
   }
 }
 
@@ -41,6 +41,19 @@ function calcularInteresRetorno(monto, tasa) {
   return Number(tasa / 100 * monto);
 }
 
+// function obtenerMontoAinvertir() {
+//   return 0;
+// }
+
+// function obtenerCantidadMeses() {
+//   return 0;
+// }
+
+// function calcularResultado() {
+//   return 0;
+// }
+
+
 function aInvertir() {
   // cantidadInvertida como acumulador para futuros "inputs"
   // let ingreso1= 123;
@@ -53,6 +66,9 @@ function aInvertir() {
     return false;
   } else {
     alert("Asì se habla! 😉 ");
+
+    // No promptear x eleccion, sino q calcular x intCto y retiroAvto..
+
     try {
       while (cantidadMeses == 0) {
         Error("La cantidad invertida no puede ser cero y debe ser una cadena numérica");
@@ -62,8 +78,14 @@ function aInvertir() {
 
       for (let i = d.getMonth(); i < (parseInt(cantidadMeses) + parseInt(d.getMonth())); i++) {
         // aca va O interes compuesto o con retiro mensual.-..
+        //  si es compuesto, hay q sumarle a la cantidadInvertida el retorno del mes actual, y re invertirlo
+        //  sino, quitarlo, discriminarlo mensualmente, y sumarlo a alguna acumulador.
 
         totalRetorno = parseFloat(calcularInteresRetorno(cantidadInvertida, tasaMensual)).toFixed(2);
+
+        // aca hay q ver el tema del cambio de año y mes superior a 12
+        // funcion obtenerAnio(); 
+        // funcion obtenerMes();
         let mes = new Mes(i + 1, meses[i], indiceInflacion, cantidadInvertida, totalRetorno);
         cuentas.push(mes);
       }
