@@ -19,6 +19,7 @@ let cantidadMeses = 0;
 let totalRetorno = 0;
 let intentos = 3;
 let saludo = (nom) => { return `Hola ${nom.toUpperCase()}, Bienvenido a cuentitas!` }
+let metodo = "";
 
 function puedeContinuar(dato) {
   try {
@@ -60,12 +61,19 @@ function aInvertir() {
   // let ingreson= 123;
   // cantidadInvertida = ingreso1+ingreso2+ingreson;
 
-  cantidadInvertida = prompt("Ingresá cuanto 💵 deseas destinar a invertir! 🎈 ");
+  cantidadInvertida = prompt("Ingresá cuanto 💵 deseas invertir! 🎈 ");
   if (cantidadInvertida == 0 || cantidadInvertida.trim() == " ") {
     cantidadInvertida = alert("no vas a invertir nada? que aburrido! 🤨 ");
     return false;
   } else {
     alert("Asì se habla! 😉 ");
+    let opc = prompt( 'que metodo de inversion preferis?\n (1) Interes Compuesto \n (2) Retirar mensualmente la ganancia, no la inversion...' )
+
+    if(opc == 1){
+      metodo = "intCompuesto"
+    } else {
+      metodo = "porMes"
+    }
 
     // No promptear x eleccion, sino q calcular x intCto y retiroAvto..
     try {
@@ -87,7 +95,7 @@ function aInvertir() {
         // funcion obtenerAnio(); 
         // funcion obtenerMes();
         // el indice de inflacion varia cada mes/es
-        let mes = new Mes(i + 1, 2023, meses[i], indiceInflacion, cantidadInvertida, tasaMensual);
+        let mes = new Mes(i + 1, d.getFullYear(), meses[i], indiceInflacion, cantidadInvertida, tasaMensual);
         let op = new Operacion(mes);
         // console.log("unMes: ",op.devolverMes().getNombreMes());
 
@@ -109,10 +117,10 @@ if (puedeContinuar(usuario.nombre)) {
     //devolver cadaMes.toString();
 
     usuario.operaciones.forEach(opr => {
-      console.log("una opr: ", opr.calcularRetorno());
+      console.log(opr.devolverMes().nombreMes, "retorno este mes: ", opr.calcularRetornoPorMes());
     });
 
-    totalRetorno = usuario.calcularRetornoTotal();
+    totalRetorno = usuario.calcularRetornoTotal(metodo);
 
     alert(`A los ${cantidadMeses} meses, invirtiendo: ${cantidadInvertida}$, vas a recibir: ${totalRetorno}$ en intereses!😁, un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
   }

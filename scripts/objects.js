@@ -25,8 +25,19 @@ class Operacion {
     return this.mes;
   }
 
-  calcularRetorno() {
-    return Number(((this.mes.tasaMensual / 100) * this.mes.inversion).toFixed(2));
+  calcularRetornoPorMes() {
+    //devuelve la ganancia generada este mes
+    // return Number(((this.mes.tasaMensual / 100) * Number(this.mes.inversion)).toFixed(2));
+    return Number(((this.mes.tasaMensual / 100) * (Number(this.mes.inversion))).toFixed(2));
+  }
+
+  calcularRetornoIntCompuesto(mesAnterior) {
+    console.log("esteMesYelOtro: ", mesAnterior.nombreMes === this.mes.nombreMes);
+    if (mesAnterior.nombreMes === this.mes.nombreMes) {
+      return Number(((this.mes.tasaMensual / 100) * (Number(this.mes.inversion))).toFixed(2));
+    } else {
+      return Number(((this.mes.tasaMensual / 100) * (Number(mesAnterior.calcularRetornoPorMes()) + Number(this.mes.inversion))).toFixed(2));
+    }
   }
 }
 
@@ -40,27 +51,34 @@ class Persona {
     console.log(`Hola, mi nombre es ${this.nombre}.`);
   }
 
-  buscarRetornoPorNumeroMes(numeroMes) {
+  buscarMesPorNumeroMes(numeroMes) {
     const pos = this.operaciones.findIndex(m => m.devolverMes().numeroMes === numeroMes);
     return this.operaciones[pos];
   }
 
-  buscarRetornoPorNombreMes(nombreMes) {
+  buscarMesPorNombreMes(nombreMes) {
     const pos = this.operaciones.findIndex(m => m.devolverMes().nombreMes === nombreMes);
     return this.operaciones[pos];
   }
 
-  calcularRetornoTotal() {
+  calcularRetornoTotal(metodo) {
     let suma = 0;
     if (this.operaciones.length !== 0) {
-      this.operaciones.forEach(op => {
-        console.log("calc: ", op.calcularRetorno());
-        suma += op.calcularRetorno();
-      });
-      return suma;
+      if (metodo == "porMes") {
+        this.operaciones.forEach(op => {
+          suma += op.calcularRetornoPorMes();
+        });
+      } else {
+        let opAnt = this.operaciones[0].mes;
+        this.operaciones.forEach(op => {
+          suma += op.calcularRetornoIntCompuesto(opAnt);
+          opAnt = op;
+        });
+      }
     }
-    return 0;
+    return parseFloat(suma).toFixed(2);
   }
+
 }
 
 
