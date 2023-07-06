@@ -1,8 +1,23 @@
-console.log("Hello cuentitas!");
+// START OF THE HISTORY 
 
-/// START OF THE HISTORY 
+///////////////////////////// constantes
+const tasaAnual = 97;
+const mvm = 0;
+const canastaBasica = 0;
+const indiceInflacion = 1;
+const dolarOficial = 0;
+const dolarBluew = 0;
+const d = new Date();
+const usuario = new Persona();
+
+///////////////////////////// variables
+var meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+let tasaMensual = Number(((tasaAnual * 8.21918) / 100).toFixed(6));
+let cantidadBasePromedio = 9999;
+let cantidadInvertida = 0;
+let cantidadMeses = 0;
+let totalRetorno = 0;
 let intentos = 3;
-let usuario = new Persona();
 let saludo = (nom) => { return `Hola ${nom.toUpperCase()}, Bienvenido a cuentitas!` }
 
 function puedeContinuar(dato) {
@@ -21,24 +36,8 @@ if (!puedeContinuar(usuario.nombre)) {
       intentos = intentos - 1;
     }
   } catch (error) {
-    alert("Canceló el ingreso de su nombre, [F5] para recargar");
+    alert("Que lastima que no queres aprender a invetir?? 😫");
   }
-}
-
-//INICIALIZACIONES Y VARIABLES
-var meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-const d = new Date();
-const tasaAnual = 97;
-const tasaMensual = (tasaAnual / 12).toFixed(2);
-let indiceInflacion = 2.01;
-let cantidadBasePromedio = 9999;
-let cantidadInvertida = 0;
-let cantidadMeses = 0;
-let totalRetorno = 0;
-let cuentas = [];
-
-function calcularInteresRetorno(monto, tasa) {
-  return Number(tasa / 100 * monto);
 }
 
 // function obtenerMontoAinvertir() {
@@ -60,6 +59,7 @@ function aInvertir() {
   // let ingreso2= 123;
   // let ingreson= 123;
   // cantidadInvertida = ingreso1+ingreso2+ingreson;
+
   cantidadInvertida = prompt("Ingresá cuanto 💵 deseas destinar a invertir! 🎈 ");
   if (cantidadInvertida == 0 || cantidadInvertida.trim() == " ") {
     cantidadInvertida = alert("no vas a invertir nada? que aburrido! 🤨 ");
@@ -68,26 +68,31 @@ function aInvertir() {
     alert("Asì se habla! 😉 ");
 
     // No promptear x eleccion, sino q calcular x intCto y retiroAvto..
-
     try {
       while (cantidadMeses == 0) {
-        Error("La cantidad invertida no puede ser cero y debe ser una cadena numérica");
         cantidadMeses = prompt("cuantos meses vas a destinar a invertir el dinero? minimo 1");
       }
-      // es a partir de la fecha actual o fijo mes-a-mes..?
+      // es a partir de la fecha actual o fijo, mes-a-mes..?
 
       for (let i = d.getMonth(); i < (parseInt(cantidadMeses) + parseInt(d.getMonth())); i++) {
         // aca va O interes compuesto o con retiro mensual.-..
         //  si es compuesto, hay q sumarle a la cantidadInvertida el retorno del mes actual, y re invertirlo
         //  sino, quitarlo, discriminarlo mensualmente, y sumarlo a alguna acumulador.
 
-        totalRetorno = parseFloat(calcularInteresRetorno(cantidadInvertida, tasaMensual)).toFixed(2);
+        //la tasa mensual se establece de la constante y a medida que "avanzan" los meses, se ajustam por el indice
+        // de inflacion y el promedio de aumetnos de puntos mensual al año
 
+        // el retorno lo calcula CADA MES en virtud de los valores mensuales..
         // aca hay q ver el tema del cambio de año y mes superior a 12
         // funcion obtenerAnio(); 
         // funcion obtenerMes();
-        let mes = new Mes(i + 1, meses[i], indiceInflacion, cantidadInvertida, totalRetorno);
-        cuentas.push(mes);
+        // el indice de inflacion varia cada mes/es
+        let mes = new Mes(i + 1, 2023, meses[i], indiceInflacion, cantidadInvertida, tasaMensual);
+        let op = new Operacion(mes);
+        // console.log("unMes: ",op.devolverMes().getNombreMes());
+
+        // totalRetorno = cta.calcularRetornoMensual();
+        usuario.operaciones.push(op);
       }
     } catch (error) {
       console.error("Error:", error.message);
@@ -102,12 +107,16 @@ if (puedeContinuar(usuario.nombre)) {
 
   if (aInvertir()) {
     //devolver cadaMes.toString();
-    cuentas.forEach(mes => {
-      console.log(mes);
+
+    usuario.operaciones.forEach(opr => {
+      console.log("una opr: ", opr.calcularRetorno());
     });
+
+    totalRetorno = usuario.calcularRetornoTotal();
+
     alert(`A los ${cantidadMeses} meses, invirtiendo: ${cantidadInvertida}$, vas a recibir: ${totalRetorno}$ en intereses!😁, un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
   }
 } else {
-  alert("Que lastima que no queres aprender a invetir?? 😫");
+  alert("Canceló el ingreso de su nombre, [F5] para recargar");
 }
 
