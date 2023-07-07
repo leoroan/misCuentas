@@ -15,6 +15,10 @@ class Mes {
   getNombreMes() {
     return this.nombreMes;
   }
+
+  getInversion() {
+    return this.inversion;
+  }
 }
 class Operacion {
   constructor(Mes) {
@@ -25,19 +29,12 @@ class Operacion {
     return this.mes;
   }
 
+  /**
+   * Devuelve la ganancia generada este mes.
+   * @returns  Number
+   */
   calcularRetornoPorMes() {
-    //devuelve la ganancia generada este mes
-    // return Number(((this.mes.tasaMensual / 100) * Number(this.mes.inversion)).toFixed(2));
     return Number(((this.mes.tasaMensual / 100) * (Number(this.mes.inversion))).toFixed(2));
-  }
-
-  calcularRetornoIntCompuesto(mesAnterior) {
-    console.log("esteMesYelOtro: ", mesAnterior.nombreMes === this.mes.nombreMes);
-    if (mesAnterior.nombreMes === this.mes.nombreMes) {
-      return Number(((this.mes.tasaMensual / 100) * (Number(this.mes.inversion))).toFixed(2));
-    } else {
-      return Number(((this.mes.tasaMensual / 100) * (Number(mesAnterior.calcularRetornoPorMes()) + Number(this.mes.inversion))).toFixed(2));
-    }
   }
 }
 
@@ -69,16 +66,22 @@ class Persona {
           suma += op.calcularRetornoPorMes();
         });
       } else {
+
         let opAnt = this.operaciones[0].mes;
-        this.operaciones.forEach(op => {
-          suma += op.calcularRetornoIntCompuesto(opAnt);
+        this.operaciones.forEach(op => {          
+          if (opAnt.nombreMes === op.devolverMes().getNombreMes()) {
+            // suma += op.calcularRetornoIntCompuesto(opAnt);
+            suma += op.calcularRetornoPorMes();
+          } else {
+            op.mes.inversion = Number(opAnt.mes.inversion) + Number(opAnt.calcularRetornoPorMes());
+            suma += op.calcularRetornoPorMes();
+          }
           opAnt = op;
         });
       }
     }
     return parseFloat(suma).toFixed(2);
   }
-
 }
 
 
