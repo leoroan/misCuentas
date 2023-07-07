@@ -42,6 +42,9 @@ class Operacion {
     return Number(((this.mes.tasaMensual / 100) * (Number(this.mes.inversion))).toFixed(2));
   }
 
+  /**
+   * @returns {string} 
+   */
   toString() {
     return `Este mes: ${this.mes.getNombreMes()}, invirtiendo: $${this.mes.getInversion()}, obtiene de retorno: $${this.calcularRetornoPorMes()}`;
   }
@@ -102,8 +105,8 @@ class Persona {
    * Este metodo itera por cada Operacion y de acuerdo al parametro recibido,
    * devuelvo un resultado u otro. (mes a mes o interes compuesto)
    * 
-   * @param {*} metodo 
-   * @returns 
+   * @param {String} metodo 
+   * @returns {Float}
    */
   calcularRetornoTotal(metodo) {
     let suma = 0;
