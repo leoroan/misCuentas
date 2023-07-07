@@ -12,6 +12,7 @@ class Mes {
     this.porcentajeRelacionInflacion = 0;
   }
 
+  // setters & getters
   getNombreMes() {
     return this.nombreMes;
   }
@@ -19,13 +20,17 @@ class Mes {
   getInversion() {
     return this.inversion;
   }
+
+  setInversion(monto){
+    this.inversion = monto;
+  }
 }
 class Operacion {
   constructor(Mes) {
     this.mes = Mes;
   }
 
-  devolverMes() {
+  devolverMes() { //getMes()
     return this.mes;
   }
 
@@ -58,6 +63,21 @@ class Persona {
     return this.operaciones[pos];
   }
 
+  /**
+   * 
+   * @returns un array con operaciones.
+   */
+  getOperaciones(){
+    return this.operaciones;
+  }
+
+  /**
+   * Este metodo de la clase itera por cada operacion, de acuerdo al parametro recibido,
+   * devuelvo un resultado u otro. (mes a mes o interes compuesto)
+   * 
+   * @param {*} metodo 
+   * @returns 
+   */
   calcularRetornoTotal(metodo) {
     let suma = 0;
     if (this.operaciones.length !== 0) {
@@ -66,14 +86,13 @@ class Persona {
           suma += op.calcularRetornoPorMes();
         });
       } else {
-
-        let opAnt = this.operaciones[0].mes;
-        this.operaciones.forEach(op => {          
-          if (opAnt.nombreMes === op.devolverMes().getNombreMes()) {
-            // suma += op.calcularRetornoIntCompuesto(opAnt);
+        let opAnt = this.operaciones[0];
+        this.operaciones.forEach(op => {      
+          // si es el primer mes del calculo
+          if (opAnt.devolverMes().getNombreMes() === op.devolverMes().getNombreMes()) {
             suma += op.calcularRetornoPorMes();
           } else {
-            op.mes.inversion = Number(opAnt.mes.inversion) + Number(opAnt.calcularRetornoPorMes());
+            op.devolverMes().setInversion(Number(opAnt.devolverMes().getInversion()) + Number(opAnt.calcularRetornoPorMes())); 
             suma += op.calcularRetornoPorMes();
           }
           opAnt = op;

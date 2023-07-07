@@ -21,39 +21,92 @@ let intentos = 3;
 let saludo = (nom) => { return `Hola ${nom.toUpperCase()}, Bienvenido a cuentitas!` }
 let metodo = "";
 
-function puedeContinuar(dato) {
+
+///////////////////////////// funciones del sistema
+
+/**
+ *  Evalua si la cadena recibida tenga almenos un caracter.
+ * @param {String} cad 
+ * @returns boolean
+ */
+function puedeContinuar(cad) {
   try {
-    return (dato.length !== 0);
+    return (cad.length !== 0);
   } catch (error) {
     return false;
   }
 }
 
-if (!puedeContinuar(usuario.nombre)) {
-  try {
-    usuario.nombre = prompt("Hola 🙎‍♂️ o 🙎, comencemos por saber quién sos!, me dirías tu nombre?").trim();
-    while (usuario.nombre.length == 0 && intentos != 0) {
-      usuario.nombre = prompt("Ingrese su nombre para continuar");
-      intentos = intentos - 1;
-    }
-  } catch (error) {
-    alert("Que lastima que no queres aprender a invetir?? 😫");
+/**
+ * Obtiene por medio de un prompt un valor 
+ * @returns Number
+ */
+function obtenerInversion() {
+  let monto = parseFloat(prompt("Ingresá cuanto 💵 deseas invertir! 🎈 "));
+  if (monto <= 0) {
+    alert("no vas a invertir nada? que aburrido! 🤨 ");
+    return 0;
+  } else {
+    alert("Asì se habla! 😉 ");
+    return monto;
   }
 }
 
-// function obtenerMontoAinvertir() {
-//   return 0;
-// }
+/**
+ * Obtiene por medio de un prompt una opcion 
+ * @returns String
+ */
+function obntenerMetodo() {
+  let opc = 0;
+  opc = prompt('que metodo de inversion preferis?\n (1) Interes Compuesto \n (2) Retirar mensualmente la ganancia, (no la inversion)');
+  while (opc != 1 && opc != 2) {
+    opc = prompt('Debe elegir OPCION 1 (Int.Compuesto) o 2 (Retirar x Mes)');
+  }
+  if (opc === 1) {
+    return "intCompuesto";
+  } else if (opc === 2) {
+    return "porMes";
+  }
+}
 
-// function obtenerCantidadMeses() {
-//   return 0;
-// }
+/**
+ * Obtiene por medio de un prompt un numero 
+ * @returns Number
+ */
+function obtenerPlazo() {
+  let cant = 0;
+  while (cant == 0) {
+    cant = prompt("cuantos meses vas a destinar a invertir el dinero? (minimo 1)");
+  }
+  return cant;
+}
 
-// function calcularResultado() {
-//   return 0;
-// }
+/**
+ * Esta funcion actua como disparador de otras tres funciones, que en conjunto "inicializan" la aplicacion.
+ * @param {Number} monto 
+ * @param {String} tipo 
+ * @param {Number} plazo 
+ * @returns monto, tipo , plazo 
+ */
+function obtenerMontoTipoyPlazo(monto, tipo, plazo) {
+  monto = obtenerInversion();
+  if (monto) {
+    tipo = obntenerMetodo();
+    plazo = obtenerPlazo();
+    return {
+      monto: monto,
+      tipo: tipo,
+      plazo: plazo
+    };
+  } else {
+    return false;
+  }
+}
 
-
+/**
+ * Esta funcion realiza el proceso de cálculo para cada operacion, segun la opcion del usuario.
+ * @returns boolean
+ */
 function aInvertir() {
   // cantidadInvertida como acumulador para futuros "inputs"
   // let ingreso1= 123;
@@ -61,26 +114,13 @@ function aInvertir() {
   // let ingreson= 123;
   // cantidadInvertida = ingreso1+ingreso2+ingreson;
 
-  cantidadInvertida = prompt("Ingresá cuanto 💵 deseas invertir! 🎈 ");
-  if (cantidadInvertida == 0 || cantidadInvertida.trim() == " ") {
-    cantidadInvertida = alert("no vas a invertir nada? que aburrido! 🤨 ");
-    return false;
-  } else {
-    alert("Asì se habla! 😉 ");
-    let opc = prompt( 'que metodo de inversion preferis?\n (1) Interes Compuesto \n (2) Retirar mensualmente la ganancia, no la inversion...' )
-
-    if(opc == 1){
-      metodo = "intCompuesto"
-    } else {
-      metodo = "porMes"
-    }
-
-    // No promptear x eleccion, sino q calcular x intCto y retiroAvto..
-    try {
-      while (cantidadMeses == 0) {
-        cantidadMeses = prompt("cuantos meses vas a destinar a invertir el dinero? minimo 1");
-      }
-      // es a partir de la fecha actual o fijo, mes-a-mes..?
+  try {
+    // es a partir de la fecha actual o fijo, mes-a-mes..?
+    const res = obtenerMontoTipoyPlazo(cantidadInvertida, metodo, cantidadMeses);
+    if (res) {
+      cantidadInvertida = res.monto;
+      metodo = res.tipo;
+      cantidadMeses = res.plazo;
 
       for (let i = d.getMonth(); i < (parseInt(cantidadMeses) + parseInt(d.getMonth())); i++) {
         // aca va O interes compuesto o con retiro mensual.-..
@@ -102,26 +142,35 @@ function aInvertir() {
         // totalRetorno = cta.calcularRetornoMensual();
         usuario.operaciones.push(op);
       }
-    } catch (error) {
-      console.error("Error:", error.message);
     }
+  } catch (error) {
+    console.error("Error:", error.message);
   }
   return true;
 }
 
 // MAIN
-if (puedeContinuar(usuario.nombre)) {
-  alert(saludo(usuario.nombre + "!"));
+if (!puedeContinuar(usuario.nombre)) {
+  try {
+    usuario.nombre = prompt("Hola 🙎‍♂️ o 🙎, comencemos por saber quién sos!, me dirías tu nombre?").trim();
+    while (usuario.nombre.length == 0 && intentos != 0) {
+      usuario.nombre = prompt("Ingrese su nombre para continuar");
+      intentos = intentos - 1;
+    }
+  } catch (error) {
+    alert("Que lastima que no queres aprender a invetir?? 😫");
+  }
+}
 
+if (puedeContinuar(usuario.nombre)) {
+  //greetings
+  alert(saludo(usuario.nombre + "!"));
   if (aInvertir()) {
     //devolver cadaMes.toString();
-
-    usuario.operaciones.forEach(opr => {
-      console.log(opr.devolverMes().nombreMes, "retorno este mes: ", opr.calcularRetornoPorMes());
-    });
-
+    // usuario.getOperaciones().forEach(opr => {
+    //   console.log(opr.devolverMes().getNombreMes(), "retorno este mes: ", opr.calcularRetornoPorMes());
+    // });
     totalRetorno = usuario.calcularRetornoTotal(metodo);
-
     alert(`A los ${cantidadMeses} meses, invirtiendo: ${cantidadInvertida}$, vas a recibir: ${totalRetorno}$ en intereses!😁, un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
   }
 } else {
