@@ -21,7 +21,7 @@ class Mes {
     return this.inversion;
   }
 
-  setInversion(monto){
+  setInversion(monto) {
     this.inversion = monto;
   }
 }
@@ -40,6 +40,10 @@ class Operacion {
    */
   calcularRetornoPorMes() {
     return Number(((this.mes.tasaMensual / 100) * (Number(this.mes.inversion))).toFixed(2));
+  }
+
+  toString() {
+    return `Este mes: ${this.mes.getNombreMes()}, invirtiendo: $${this.mes.getInversion()}, obtiene de retorno: $${this.calcularRetornoPorMes()}`;
   }
 }
 
@@ -64,15 +68,38 @@ class Persona {
   }
 
   /**
-   * 
    * @returns un array con operaciones.
    */
-  getOperaciones(){
+  getOperaciones() {
     return this.operaciones;
   }
 
+  calcularRetornoTotalPorMes() {
+    let suma = 0;
+    this.operaciones.forEach(op => {
+      suma += op.calcularRetornoPorMes();
+    });
+    return suma;
+  }
+
+  calcularRetornoTotalAcumulado() {
+    let suma = 0;
+    let opAnt = this.operaciones[0];
+    this.operaciones.forEach(op => {
+      // si es el primer mes del cálculo
+      if (opAnt.devolverMes().getNombreMes() === op.devolverMes().getNombreMes()) {
+        suma += op.calcularRetornoPorMes();
+      } else {
+        op.devolverMes().setInversion(Number(opAnt.devolverMes().getInversion()) + Number(opAnt.calcularRetornoPorMes()));
+        suma += op.calcularRetornoPorMes();
+      }
+      opAnt = op;
+    });
+    return suma;
+  }
+
   /**
-   * Este metodo de la clase itera por cada operacion, de acuerdo al parametro recibido,
+   * Este metodo itera por cada Operacion y de acuerdo al parametro recibido,
    * devuelvo un resultado u otro. (mes a mes o interes compuesto)
    * 
    * @param {*} metodo 
@@ -82,25 +109,16 @@ class Persona {
     let suma = 0;
     if (this.operaciones.length !== 0) {
       if (metodo == "porMes") {
-        this.operaciones.forEach(op => {
-          suma += op.calcularRetornoPorMes();
-        });
-      } else {
-        let opAnt = this.operaciones[0];
-        this.operaciones.forEach(op => {      
-          // si es el primer mes del calculo
-          if (opAnt.devolverMes().getNombreMes() === op.devolverMes().getNombreMes()) {
-            suma += op.calcularRetornoPorMes();
-          } else {
-            op.devolverMes().setInversion(Number(opAnt.devolverMes().getInversion()) + Number(opAnt.calcularRetornoPorMes())); 
-            suma += op.calcularRetornoPorMes();
-          }
-          opAnt = op;
-        });
+        suma = this.calcularRetornoTotalPorMes();
+      } else { // sies interes compuesto...
+        suma = this.calcularRetornoTotalAcumulado();
       }
     }
     return parseFloat(suma).toFixed(2);
   }
+
+
+
 }
 
 

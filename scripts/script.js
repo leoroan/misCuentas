@@ -170,6 +170,8 @@ if (puedeContinuar(usuario.nombre)) {
     // usuario.getOperaciones().forEach(opr => {
     //   console.log(opr.devolverMes().getNombreMes(), "retorno este mes: ", opr.calcularRetornoPorMes());
     // });
+
+    //resultado
     totalRetorno = usuario.calcularRetornoTotal(metodo);
     alert(`A los ${cantidadMeses} meses, invirtiendo: ${cantidadInvertida}$, vas a recibir: ${totalRetorno}$ en intereses!😁, un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
   }
