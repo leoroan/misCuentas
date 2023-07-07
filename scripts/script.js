@@ -59,18 +59,18 @@ function obtenerInversion() {
 function obntenerMetodo() {
   let opc = 0;
   opc = prompt('que metodo de inversion preferis?\n (1) Interes Compuesto \n (2) Retirar mensualmente la ganancia, (no la inversion)');
-  while (opc != 1 && opc != 2) {
+  while (opc != "1" && opc != "2") {
     opc = prompt('Debe elegir OPCION 1 (Int.Compuesto) o 2 (Retirar x Mes)');
   }
-  if (opc === 1) {
+  if (opc === "1") {
     return "intCompuesto";
-  } else if (opc === 2) {
+  } else if (opc === "2") {
     return "porMes";
   }
 }
 
 /**
- * Obtiene por medio de un prompt un numero 
+ * Obtiene por medio de un prompt un numero (cantidad de meses)
  * @returns Number
  */
 function obtenerPlazo() {
@@ -164,7 +164,7 @@ if (!puedeContinuar(usuario.nombre)) {
 
 if (puedeContinuar(usuario.nombre)) {
   //greetings
-  alert(saludo(usuario.nombre + "!"));
+  alert(saludo(usuario.nombre + "! 🔥🔥"));
   if (aInvertir()) {
     //devolver cadaMes.toString();
     // usuario.getOperaciones().forEach(opr => {
@@ -176,6 +176,6 @@ if (puedeContinuar(usuario.nombre)) {
     alert(`A los ${cantidadMeses} meses, invirtiendo: ${cantidadInvertida}$, vas a recibir: ${totalRetorno}$ en intereses!😁, un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
   }
 } else {
-  alert("Canceló el ingreso de su nombre, [F5] para recargar");
+  alert("⛔ CANCELÓ LA OPERACION!! - PRESIONE [F5] PARA RECARGAR ⛔");
 }
 
