@@ -1,8 +1,9 @@
 
 class Mes {
-  constructor(numeroMes, numeroAnio, nombreMes, tasaInflacion = 0, inversion = 0, tasaMensual) {
+  constructor(numeroMes, numeroDia, nombreMes, numeroAnio, tasaInflacion = 0, inversion = 0, tasaMensual) {
     this.icono = "💵";
     this.nombreMes = nombreMes;
+    this.numeroDia = numeroDia;
     this.numeroMes = numeroMes;
     this.numeroAnio = numeroAnio;
     this.tasaInflacion = tasaInflacion;
