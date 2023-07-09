@@ -108,7 +108,7 @@ function obtenerMontoTipoyPlazo(monto, tipo, plazo) {
 
 /**
  * Devulve una cadena para identificar el modo de visualizar los "meses"
- * @returns string
+ * @returns string ("mesAmes" || "desdeHoy")
  */
 function modoDeContarLosMeses() {
   let opc = 0;
@@ -126,6 +126,10 @@ function modoDeContarLosMeses() {
   }
 }
 
+/**
+ * Recibida una coleccion, de cada operacion, imprime sus datos apra ver en una tabla.
+ * @param {Operacion[]} operaciones 
+ */
 function verCuentas(operaciones) {
   operaciones.forEach(op => {
     const datosAMostrar = {
@@ -169,11 +173,6 @@ function filtrar(usuario) {
  * @returns boolean
  */
 function aInvertir() {
-  // cantidadInvertida como acumulador para futuros "inputs"
-  // let ingreso1= 123;
-  // let ingreso2= 123;
-  // let ingreson= 123;
-  // cantidadInvertida = ingreso1+ingreso2+ingreson;
 
   try {
     const res = obtenerMontoTipoyPlazo(cantidadInvertida, metodo, cantidadMeses);
@@ -229,27 +228,28 @@ if (!puedeContinuar(usuario.nombre)) {
 }
 
 if (puedeContinuar(usuario.nombre)) {
-  //greetings
-  alert(saludo(usuario.nombre + "! 🔥🔥"));
-  if (aInvertir()) {
-    //devolver cadaMes.toString();
-    // usuario.getOperaciones().forEach(opr => {
-    //   console.log(opr.devolverMes().getNombreMes(), "retorno este mes: ", opr.calcularRetornoPorMes());
-    // });
+  let continuar = true;
 
-    //resultado
+  //un saludo
+  alert(saludo(usuario.nombre + "! 🔥🔥"));
+
+  // si puede inicializa la operacion...
+  if (aInvertir()) {
+
+    // con los datos provistos, realiza el calculo total
     totalRetorno = usuario.calcularRetornoTotal(metodo);
 
+    // muestro las "cuentas" por consola
     verCuentas(usuario.getOperaciones());
 
+    //Informo el resultado final de mis cuentas.
     alert(`${usuario.getName() + "! "} A los ${cantidadMeses} meses,\n
            invirtiendo: ${cantidadInvertida}$, \n
            de manera ${metodo},\n
            vas a recibir: ${totalRetorno}$ en intereses!😁,\n
            un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
-
-    let continuar = true;
-
+    
+    // un menu para facilitar la busqueda y filtro
     while (continuar) {
       const opc = prompt(`Elige una opción:\n
                           1. Buscar cuentas del mes\n
@@ -277,8 +277,8 @@ if (puedeContinuar(usuario.nombre)) {
     }
   }
 
-
 } else {
+  //control de fin
   alert("⛔ CANCELÓ LA OPERACION!! - PRESIONE [F5] PARA RECARGAR ⛔");
   console.warn("OPERACION CANCELADA");
   console.clear();

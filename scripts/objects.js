@@ -78,6 +78,11 @@ class Persona {
     return this.operaciones[pos];
   }
 
+  /**
+   * Realiza la busqueda en la coleccion por nombre del mes indicado por parametro. 
+   * @param {String} nombreMes 
+   * @returns coleccion de "Operaciones" | null
+   */
   buscarMesPorNombreMes(nombreMes) {
     const operacionesEncontradas = [];
     for (let i = 0; i < this.getOperaciones().length; i++) {
@@ -89,11 +94,15 @@ class Persona {
     return operacionesEncontradas;
   }
 
+  /**
+   * Funcion que filtra por año
+   * @param {Number} anio 
+   * @returns collecion de Operaciones
+   */
   filtrarOperacionesPorAnio(anio) {
     const ops = this.getOperaciones();
     return ops.filter(op => op.devolverMes().getAnioMes() >= anio);
   }
-
 
 
   /**
@@ -111,6 +120,11 @@ class Persona {
     return suma;
   }
 
+  /**
+   * Realiza la suma de los retornos de cada mes en cada operacion.
+   * y la retorna. tiene en cuenta si es primer mes o siguiente. 
+   * @returns Float
+   */
   calcularRetornoTotalAcumulado() {
     let suma = 0;
     let opAnt = this.operaciones[0];
