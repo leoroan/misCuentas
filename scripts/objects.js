@@ -18,8 +18,12 @@ class Mes {
     return this.nombreMes;
   }
 
+  getAnioMes() {
+    return this.numeroAnio;
+  }
+
   getInversion() {
-    return this.inversion;
+    return parseFloat(this.inversion).toFixed(2);
   }
 
   setInversion(monto) {
@@ -61,15 +65,36 @@ class Persona {
     console.log(`Hola, mi nombre es ${this.nombre}.`);
   }
 
+  getName() {
+    return this.nombre;
+  }
+
+  getOperaciones() {
+    return this.operaciones();
+  }
+
   buscarMesPorNumeroMes(numeroMes) {
     const pos = this.operaciones.findIndex(m => m.devolverMes().numeroMes === numeroMes);
     return this.operaciones[pos];
   }
 
   buscarMesPorNombreMes(nombreMes) {
-    const pos = this.operaciones.findIndex(m => m.devolverMes().nombreMes === nombreMes);
-    return this.operaciones[pos];
+    const operacionesEncontradas = [];
+    for (let i = 0; i < this.getOperaciones().length; i++) {
+      const mes = this.getOperaciones()[i].devolverMes();
+      if (mes.getNombreMes() === nombreMes || mes.getNombreMes().includes(nombreMes)) {
+        operacionesEncontradas.push(this.getOperaciones()[i]);
+      }
+    }
+    return operacionesEncontradas;
   }
+
+  filtrarOperacionesPorAnio(anio) {
+    const ops = this.getOperaciones();
+    return ops.filter(op => op.devolverMes().getAnioMes() >= anio);
+  }
+
+
 
   /**
    * @returns un array con operaciones.

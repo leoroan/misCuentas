@@ -14,7 +14,7 @@ var meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "ag
 let tasaMensual = Number(((tasaAnual * 8.21918) / 100).toFixed(6));
 let cantidadBasePromedio = 9999;
 let cantidadInvertida = 0;
-let cantidadMeses = 0;
+let cantidadMeses = 1;
 let totalRetorno = 0;
 let intentos = 3;
 let saludo = (nom) => { return `Hola ${nom.toUpperCase()}, Bienvenido a cuentitas!` }
@@ -42,7 +42,7 @@ function puedeContinuar(cad) {
  */
 function obtenerInversion() {
   let monto = parseFloat(prompt("Ingresá cuanto 💵 deseas invertir! 🎈 "));
-  if (monto <= 0) {
+  if (monto === 0 || isNaN(monto)) {
     alert("no vas a invertir nada? que aburrido! 🤨 ");
     return 0;
   } else {
@@ -77,7 +77,7 @@ function obntenerMetodo() {
  */
 function obtenerPlazo() {
   let cant = 0;
-  while (cant == 0) {
+  while (cant <= 0) {
     cant = prompt("cuantos meses vas a destinar a invertir el dinero? (minimo 1)");
   }
   return cant;
@@ -126,6 +126,44 @@ function modoDeContarLosMeses() {
   }
 }
 
+function verCuentas(operaciones) {
+  operaciones.forEach(op => {
+    const datosAMostrar = {
+      Mes: op.devolverMes().getNombreMes().toUpperCase(),
+      Anio: op.devolverMes().getAnioMes(),
+      Inversion: op.devolverMes().getInversion(),
+      RetornoEsteMes: op.calcularRetornoPorMes(),
+    };
+    console.table(datosAMostrar);
+  });
+}
+
+function buscarPorNombre(usuario) {
+  console.clear();
+  const nombreBuscado = prompt("Ingresa el nombre del mes que querés buscar:").toLowerCase();
+  const cuentasDelMes = usuario.buscarMesPorNombreMes(nombreBuscado);
+  if (usuario.buscarMesPorNombreMes(nombreBuscado).length === 0) {
+    alert("La busqueda no arrojó resultados")
+  } else {
+    console.log("TABLE CON RESULTADO DE BUSQUEDA");
+    verCuentas(cuentasDelMes);
+  }
+}
+
+function filtrar(usuario) {
+  console.clear();
+  const anioBuscado = prompt("Ingresa apartir de que año queres filtrar los datos:").toLowerCase();
+  const cuentasDelMes = usuario.filtrarOperacionesPorAnio(anioBuscado);
+  if (usuario.filtrarOperacionesPorAnio(anioBuscado).length === 0) {
+    alert("La busqueda no arrojó resultados")
+  } else {
+    console.log("TABLE CON RESULTADO DE BUSQUEDA");
+    verCuentas(cuentasDelMes);
+  }
+
+}
+
+
 /**
  * Cálculo para cada operacion, segun la opcion del usuario.
  * @returns boolean
@@ -154,7 +192,9 @@ function aInvertir() {
       // aca hay q ver el tema del cambio de año y mes superior a 12
       // el indice de inflacion varia cada mes/es
       modoOp = modoDeContarLosMeses();
-      // TO BE UPDATED SOON
+      // ******************
+      // TO BE UPDATED SOON!
+      // ******************
       for (let i = 0; i < cantidadMeses; i++) {
         if (modoOp == "mesAmes") {
           mes = new Mes(fechaAux.getMonth() + 1, 1, meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
@@ -199,8 +239,45 @@ if (puedeContinuar(usuario.nombre)) {
 
     //resultado
     totalRetorno = usuario.calcularRetornoTotal(metodo);
-    alert(`A los ${cantidadMeses} meses, invirtiendo: ${cantidadInvertida}$, vas a recibir: ${totalRetorno}$ en intereses!😁, un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
+
+    verCuentas(usuario.getOperaciones());
+
+    alert(`${usuario.getName() + "! "} A los ${cantidadMeses} meses,\n
+           invirtiendo: ${cantidadInvertida}$, \n
+           de manera ${metodo},\n
+           vas a recibir: ${totalRetorno}$ en intereses!😁,\n
+           un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
+
+    let continuar = true;
+
+    while (continuar) {
+      const opc = prompt(`Elige una opción:\n
+                          1. Buscar cuentas del mes\n
+                          2. Aplicar Filtros\n
+                          4. Salir
+                        `);
+
+      switch (opc) {
+        case "1":
+          buscarPorNombre(usuario);
+          break;
+
+        case "2":
+          filtrar(usuario);
+          break;
+
+        case "4":
+          continuar = false;
+          break;
+
+        default:
+          alert("Opción no válida");
+          break;
+      }
+    }
   }
+
+
 } else {
   alert("⛔ CANCELÓ LA OPERACION!! - PRESIONE [F5] PARA RECARGAR ⛔");
   console.warn("OPERACION CANCELADA");
