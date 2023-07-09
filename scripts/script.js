@@ -6,8 +6,7 @@ const mvm = 0;
 const canastaBasica = 0;
 const indiceInflacion = 1;
 const dolarOficial = 0;
-const dolarBluew = 0;
-const d = new Date();
+const dolarBlue = 0;
 const usuario = new Persona();
 
 ///////////////////////////// variables
@@ -58,7 +57,10 @@ function obtenerInversion() {
  */
 function obntenerMetodo() {
   let opc = 0;
-  opc = prompt('que metodo de inversion preferis?\n (1) Interes Compuesto \n (2) Retirar mensualmente la ganancia, (no la inversion)');
+  opc = prompt(`que metodo de inversion preferis?\n 
+                (1) Interes Compuesto \n 
+                (2) Retirar mensualmente la ganancia, (no la inversion)
+              `);
   while (opc != "1" && opc != "2") {
     opc = prompt('Debe elegir OPCION 1 (Int.Compuesto) o 2 (Retirar x Mes)');
   }
@@ -82,7 +84,8 @@ function obtenerPlazo() {
 }
 
 /**
- * Esta funcion actua como disparador de otras tres funciones, que en conjunto "inicializan" la aplicacion.
+ * Disparador de otras tres funciones,
+ * que en conjunto "inicializan" la aplicacion.
  * @param {Number} monto 
  * @param {String} tipo 
  * @param {Number} plazo 
@@ -104,7 +107,27 @@ function obtenerMontoTipoyPlazo(monto, tipo, plazo) {
 }
 
 /**
- * Esta funcion realiza el proceso de cálculo para cada operacion, segun la opcion del usuario.
+ * Devulve una cadena para identificar el modo de visualizar los "meses"
+ * @returns string
+ */
+function modoDeContarLosMeses() {
+  let opc = 0;
+  while (opc != "1" && opc != "2") {
+    opc = prompt(`Cómo deseas ver la fecha de la cuenta? \n
+                   - (1) "mes a mes"  \n
+                   - (2) "desdes hoy" \n
+                   << ELEGÍ LA OPCION 1 o 2 >>
+                  `);
+  }
+  if (opc === "1") {
+    return "mesAmes";
+  } else if (opc === "2") {
+    return "desdeHoy";
+  }
+}
+
+/**
+ * Cálculo para cada operacion, segun la opcion del usuario.
  * @returns boolean
  */
 function aInvertir() {
@@ -115,38 +138,41 @@ function aInvertir() {
   // cantidadInvertida = ingreso1+ingreso2+ingreson;
 
   try {
-    // es a partir de la fecha actual o fijo, mes-a-mes..?
     const res = obtenerMontoTipoyPlazo(cantidadInvertida, metodo, cantidadMeses);
     if (res) {
+      let modoOp = "";
       cantidadInvertida = res.monto;
       metodo = res.tipo;
       cantidadMeses = res.plazo;
+      fechaAux = new Date();
+      let mes;
+      let op;
 
-      for (let i = d.getMonth(); i < (parseInt(cantidadMeses) + parseInt(d.getMonth())); i++) {
-        // aca va O interes compuesto o con retiro mensual.-..
-        //  si es compuesto, hay q sumarle a la cantidadInvertida el retorno del mes actual, y re invertirlo
-        //  sino, quitarlo, discriminarlo mensualmente, y sumarlo a alguna acumulador.
-
-        //la tasa mensual se establece de la constante y a medida que "avanzan" los meses, se ajustam por el indice
-        // de inflacion y el promedio de aumetnos de puntos mensual al año
-
-        // el retorno lo calcula CADA MES en virtud de los valores mensuales..
-        // aca hay q ver el tema del cambio de año y mes superior a 12
-        // funcion obtenerAnio(); 
-        // funcion obtenerMes();
-        // el indice de inflacion varia cada mes/es
-        let mes = new Mes(i + 1, d.getFullYear(), meses[i], indiceInflacion, cantidadInvertida, tasaMensual);
-        let op = new Operacion(mes);
-        // console.log("unMes: ",op.devolverMes().getNombreMes());
-
-        // totalRetorno = cta.calcularRetornoMensual();
+      //la tasa mensual se establece de la constante y a medida que "avanzan" los meses, se ajustam por el indice
+      // de inflacion y el promedio de aumetnos de puntos mensual al año
+      // el retorno lo calcula CADA MES en virtud de los valores mensuales..
+      // aca hay q ver el tema del cambio de año y mes superior a 12
+      // el indice de inflacion varia cada mes/es
+      modoOp = modoDeContarLosMeses();
+      // TO BE UPDATED SOON
+      for (let i = 0; i < cantidadMeses; i++) {
+        if (modoOp == "mesAmes") {
+          mes = new Mes(fechaAux.getMonth() + 1, 1, meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
+        } else if (modoOp == "desdeHoy") {
+          // para las operaciones de este tipo se consideran 31 días o más..
+          // no se tienen en cuenta feriados ni fines de semana.
+          mes = new Mes(fechaAux.getMonth() + 1, fechaAux.getDate(), meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
+        }
+        op = new Operacion(mes);
         usuario.operaciones.push(op);
+        fechaAux.setDate(fechaAux.getDate() + 31);
       }
+      return true;
     }
   } catch (error) {
     console.error("Error:", error.message);
   }
-  return true;
+  return false;
 }
 
 // MAIN
@@ -177,5 +203,7 @@ if (puedeContinuar(usuario.nombre)) {
   }
 } else {
   alert("⛔ CANCELÓ LA OPERACION!! - PRESIONE [F5] PARA RECARGAR ⛔");
+  console.warn("OPERACION CANCELADA");
+  console.clear();
 }
 
