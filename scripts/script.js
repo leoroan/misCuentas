@@ -55,14 +55,16 @@ function obtenerInversion() {
  * Obtiene por medio de un prompt una opcion 
  * @returns String
  */
-function obntenerMetodo() {
+function obtenerMetodo() {
   let opc = 0;
-  opc = prompt(`que metodo de inversion preferis?\n 
-                (1) Interes Compuesto \n 
-                (2) Retirar mensualmente la ganancia, (no la inversion)
+  opc = prompt(`Qué método de inversion preferis?\n 
+                -> (1) Interes Compuesto \n 
+                -> (2) Retirar mensualmente la ganancia, (no la inversion)
               `);
   while (opc != "1" && opc != "2") {
-    opc = prompt('Debe elegir OPCION 1 (Int.Compuesto) o 2 (Retirar x Mes)');
+    opc = prompt(`Debe elegir una opcion!! \n
+                  -> OPCION 1 (Int.Compuesto) o \n
+                  -> OPCION 2 (Retirar x Mes)`);
   }
   if (opc === "1") {
     return "intCompuesto";
@@ -94,7 +96,7 @@ function obtenerPlazo() {
 function obtenerMontoTipoyPlazo(monto, tipo, plazo) {
   monto = obtenerInversion();
   if (monto) {
-    tipo = obntenerMetodo();
+    tipo = obtenerMetodo();
     plazo = obtenerPlazo();
     return {
       monto: monto,
@@ -248,7 +250,7 @@ if (puedeContinuar(usuario.nombre)) {
            de manera ${metodo},\n
            vas a recibir: ${totalRetorno}$ en intereses!😁,\n
            un total de 🤤 ${parseFloat(Number(cantidadInvertida) + Number(totalRetorno)).toFixed(2)}$`);
-    
+
     // un menu para facilitar la busqueda y filtro
     while (continuar) {
       const opc = prompt(`Elige una opción:\n
