@@ -39,7 +39,8 @@
                                 <div class="card-body">
                                     <h2 class="card-title"> Bienvenido a "misCuentas" 💰</h2>
                                     <p> Una Web-App, que te permite proyectar, de acuerdo a un monto dado, tus futuros
-                                        ingresos o ganancias, teniendo en cuenta los diversos parámetros del sistema económico, como
+                                        ingresos o ganancias, teniendo en cuenta los diversos parámetros del sistema
+                                        económico, como
                                         valores en moneda extranjera, o tasas nominales y de inflacion entre otros.</p>
                                 </div>
                             </div>
@@ -48,18 +49,24 @@
 
                     <div class="row justify-content-md-center">
                         <!-- A CARD START -->
-                        <div class="col-md-auto animate__animated animate__bounce">
+                        <div class="col-md-auto animate__animated animate__bounce   ">
                             <div class="card border-light bg-transparent">
                                 <div class="card-body">
                                     <h4 class="card-title"> 💵 Comencemos por aqui! 💵</h4>
                                     <h5 class="card-subtitle mb-2 text-body-secondary">¿Querés invertir? 💸</h5>
-                                    <p>Ingresá los datos correspondientes en los siguientes campos para iniciar el calculo!</p>
-                                    <label for="">Monto a invertir</label><br>
-                                    <input class="form-control-card" type="number" required><br>
-                                    <label for="">Cantidad de meses?</label><br>
-                                    <input class="form-control-card" type="number" required><br>
-
-
+                                    <p>Ingresá los datos correspondientes en los siguientes campos para iniciar el
+                                        calculo!</p>
+                                    <form class="needs-validation">
+                                        <label for="montoInput"  class="form-label">Monto a invertir?</label><br>
+                                        <input class="form-control-card" id="montoInput" type="number" required><br>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                        <label for="plazoInput"  class="form-label">Cantidad de meses?</label><br>
+                                        <input class="form-control-card" id="plazoInput" type="number" required><br>
+                                        <button type="submit" id="mainButton"
+                                            class="btn btn-outline-light mt-2">Calcular!✨</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -79,6 +86,7 @@
     </div>
     <!-- <script src="scripts/objects.js"></script>
     <script src="scripts/script.js"></script> -->
+    <script src="scripts/scriptV2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
         </script>
