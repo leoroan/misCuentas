@@ -372,6 +372,14 @@ header .fw-light {
   font-weight: 700;
 }
 
+.hide {
+  display: none !important;
+}
+
+#cardResultDisplay {
+  display: none;
+}
+
 footer {
   margin: 10px 0 10px 0;
 }/*# sourceMappingURL=style.css.map */

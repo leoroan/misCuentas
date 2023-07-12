@@ -20,20 +20,39 @@
 <body class="container">
     <div class="d-flex flex-column justify-content-center h-100">
 
-        <header class="text-center">
-            <h1 class="fw-light text-white m-0">Hola ahorrista 😉</h1>
-        </header>
-
         <!-- <nav>
-            Nav
+
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Active</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+            </li>
+        </ul>
+
         </nav> -->
 
         <div class="d-flex flex-column justify-content-center w-100 h-100">
             <div class="cuerpoPpal w-100 h-100">
-                <div class="container text-center">
+                <!-- HEADER START -->
+                <header class="text-center">
+                    <h1 class="fw-light text-white m-0">Hola ahorrista 😉</h1>
+                    <h6>misCuentas.com</h6>
+                </header>
+                <!-- HEADER END -->
+
+                <!-- MAIN BOX START -->
+                <div class="container text-center" id="mainBox">
 
                     <!-- UNA FILA -->
-                    <div class="row justify-content-md-center">
+                    <div class="row justify-content-md-center" id="cardBienvenida">
                         <div class="col-md-auto animate__animated animate__bounce">
                             <div class="card border-light bg-transparent tarjetaPrincipal">
                                 <div class="card-body">
@@ -47,8 +66,8 @@
                         </div>
                     </div>
 
-                    <div class="row justify-content-md-center">
-                        <!-- A CARD START -->
+                    <!-- A CARD START -->
+                    <div class="row justify-content-md-center" id="cardInicial">
                         <div class="col-md-auto animate__animated animate__bounce   ">
                             <div class="card border-light bg-transparent">
                                 <div class="card-body">
@@ -57,23 +76,49 @@
                                     <p>Ingresá los datos correspondientes en los siguientes campos para iniciar el
                                         calculo!</p>
                                     <form class="needs-validation">
-                                        <label for="montoInput"  class="form-label">Monto a invertir?</label><br>
-                                        <input class="form-control-card" id="montoInput" type="number" required><br>
+                                        <label for="montoInput" class="form-label">Monto a invertir?</label><br>
+                                        <input class="form-control-card" id="montoInput" type="number" name="monto"
+                                            required><br>
+                                        <div id="validationMontoInputFeedback" class="invalid-feedback">
+                                            El monto ingresado no puede ser 0 ni menor.
+                                        </div>
                                         <div class="valid-feedback">
                                             Looks good!
                                         </div>
-                                        <label for="plazoInput"  class="form-label">Cantidad de meses?</label><br>
-                                        <input class="form-control-card" id="plazoInput" type="number" required><br>
+                                        <label for="plazoInput" class="form-label">Cantidad de meses?</label><br>
+                                        <input class="form-control-card" id="plazoInput" type="number" name="plazo"
+                                            required><br>
+                                        <div id="validationPlazoInputFeedback" class="invalid-feedback">
+                                            El plazo no puede ser menor a 1 mes ni mayor a 36 meses.
+                                        </div>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+
+
                                         <button type="submit" id="mainButton"
                                             class="btn btn-outline-light mt-2">Calcular!✨</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <!-- A CARD END -->
-
                     </div>
+                    <!-- A CARD END -->
+
+                    <div class="row justify-content-md-center" id="cardResultDisplay">
+                        <div class="col-md-auto animate__animated animate__bounce">
+                            <div class="card border-light bg-transparent tarjetaPrincipal">
+                                <div class="card-body">
+                                    <h2 class="card-title"> RESULTADOS 💰</h2>
+                                    <p> VARIAS CARDS CON NUMEROS </p>
+                                    🎁
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+                <!-- MAIN BOX END -->
             </div>
         </div>
 
