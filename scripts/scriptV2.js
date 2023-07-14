@@ -16,9 +16,7 @@ let cantidadBasePromedio = 9999;
 let cantidadInvertida = 0;
 let cantidadMeses = 1;
 let totalRetorno = 0;
-let metodo = "";
-let modoOp = "";
-
+let metodo = "intCompuesto";
 
 // Funciones ayudantes
 
@@ -28,39 +26,20 @@ let modoOp = "";
  */
 function aInvertir() {
     try {
-        let mes;
-        let op;
-        cantidadInvertida = document.getElementById("montoInput").value;
-        cantidadMeses = document.getElementById("plazoInput").value;
-        fechaAux = new Date();
-
-        //la tasa mensual se establece de la constante y a medida que "avanzan" los meses, se ajustam por el indice
-        // de inflacion y el promedio de aumetnos de puntos mensual al año
-        // el retorno lo calcula CADA MES en virtud de los valores mensuales..
-        // aca hay q ver el tema del cambio de año y mes superior a 12
-        // el indice de inflacion varia cada mes/es
-        // ******************
-        // TO BE UPDATED SOON!
-        // ******************
+        let cantidadInvertida = document.getElementById("montoInput").value;
+        let cantidadMeses = document.getElementById("plazoInput").value;
+        let fechaAux = new Date();
         for (let i = 0; i < cantidadMeses; i++) {
-            if (modoOp == "mesAmes") {
-                mes = new Mes(fechaAux.getMonth() + 1, 1, meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
-            } else if (modoOp == "desdeHoy") {
-                // para las operaciones de este tipo se consideran 31 días o más..
-                // no se tienen en cuenta feriados ni fines de semana.
-                mes = new Mes(fechaAux.getMonth() + 1, fechaAux.getDate(), meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
-            }
-            op = new Operacion(mes);
+            let mes = new Mes(fechaAux.getMonth() + 1, fechaAux.getDate(), meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
+            let op = new Operacion(mes);
             usuario.operaciones.push(op);
             fechaAux.setDate(fechaAux.getDate() + 31);
         }
-        return true;
-
     } catch (error) {
         console.error("Error:", error.message);
     }
-    return false;
 }
+
 
 ////////////////////  SegundaPartes o 3er Entrega
 
@@ -114,5 +93,29 @@ button.addEventListener('click', function (e) {
         cardInicial.classList.add('hide');
         cardResultDisplay.style.display = 'block';
         aInvertir();
+        mostrarTarjetas(usuario.getOperaciones());
     }
 });
+
+function crearTarjeta(op) {
+    return `
+    <div class="col-md-auto animate__animated animate__bounce">
+    <div class="card border-light bg-transparent">
+        <div class="card-body">
+            <h4 class="card-title"> ${op.devolverMes().getNombreMes().toUpperCase()} ${op.devolverMes().getAnioMes()} </h4>
+            <p> Invertido este mes: $${op.devolverMes().getInversion()}</p>
+            <p> Retorno este mes: $${op.calcularRetornoPorMes()}</p>
+            <p> Metodo: ${metodo}</p>
+        </div>
+    </div>
+    </div>`;
+}
+
+function mostrarTarjetas(operaciones) {
+    let contenedorTarjetas = document.getElementById("cardMes");
+    let tarjetas = "";
+    operaciones.forEach(op => {
+        tarjetas += crearTarjeta(op);
+    });
+    contenedorTarjetas.innerHTML = tarjetas;
+}
