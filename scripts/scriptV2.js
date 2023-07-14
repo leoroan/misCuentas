@@ -17,47 +17,10 @@ let cantidadInvertida = 0;
 let cantidadMeses = 1;
 let totalRetorno = 0;
 let metodo = "";
+let modoOp = "";
 
 
 // Funciones ayudantes
-
-/**
- * Devulve una cadena para identificar el modo de visualizar los "meses"
- * @returns string ("mesAmes" || "desdeHoy")
- */
-function modoDeContarLosMeses() {
-    let opc = 0;
-    while (opc != "1" && opc != "2") {
-        opc = prompt(`Cómo deseas ver la fecha de la cuenta? \n
-                     - (1) "mes a mes"  \n
-                     - (2) "desdes hoy" \n
-                     << ELEGÍ LA OPCION 1 o 2 >>
-                    `);
-    }
-    if (opc === "1") {
-        return "mesAmes";
-    } else if (opc === "2") {
-        return "desdeHoy";
-    }
-}
-
-/**
- * Disparador de otras tres funciones,
- * que en conjunto "inicializan" la aplicacion.
- * @param {Number} monto 
- * @param {String} tipo 
- * @param {Number} plazo 
- * @returns monto, tipo , plazo 
- */
-function obtenerMontoTipoyPlazo(monto, tipo, plazo) {
-    monto = document.getElementById("montoInput").value;
-    plazo = document.getElementById("plazoInput").value;
-    console.log(monto,plazo);
-    return {
-        monto: monto,
-        plazo: plazo
-    };
-}
 
 /**
  * Cálculo para cada operacion, segun la opcion del usuario.
@@ -65,38 +28,34 @@ function obtenerMontoTipoyPlazo(monto, tipo, plazo) {
  */
 function aInvertir() {
     try {
-        const res = obtenerMontoTipoyPlazo(cantidadInvertida, metodo, cantidadMeses);
-        if (res) {
-            let modoOp = "";
-            cantidadInvertida = res.monto;
-            cantidadMeses = res.plazo;
-            fechaAux = new Date();
-            let mes;
-            let op;
+        let mes;
+        let op;
+        cantidadInvertida = document.getElementById("montoInput").value;
+        cantidadMeses = document.getElementById("plazoInput").value;
+        fechaAux = new Date();
 
-            //la tasa mensual se establece de la constante y a medida que "avanzan" los meses, se ajustam por el indice
-            // de inflacion y el promedio de aumetnos de puntos mensual al año
-            // el retorno lo calcula CADA MES en virtud de los valores mensuales..
-            // aca hay q ver el tema del cambio de año y mes superior a 12
-            // el indice de inflacion varia cada mes/es
-            modoOp = modoDeContarLosMeses();
-            // ******************
-            // TO BE UPDATED SOON!
-            // ******************
-            for (let i = 0; i < cantidadMeses; i++) {
-                if (modoOp == "mesAmes") {
-                    mes = new Mes(fechaAux.getMonth() + 1, 1, meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
-                } else if (modoOp == "desdeHoy") {
-                    // para las operaciones de este tipo se consideran 31 días o más..
-                    // no se tienen en cuenta feriados ni fines de semana.
-                    mes = new Mes(fechaAux.getMonth() + 1, fechaAux.getDate(), meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
-                }
-                op = new Operacion(mes);
-                usuario.operaciones.push(op);
-                fechaAux.setDate(fechaAux.getDate() + 31);
+        //la tasa mensual se establece de la constante y a medida que "avanzan" los meses, se ajustam por el indice
+        // de inflacion y el promedio de aumetnos de puntos mensual al año
+        // el retorno lo calcula CADA MES en virtud de los valores mensuales..
+        // aca hay q ver el tema del cambio de año y mes superior a 12
+        // el indice de inflacion varia cada mes/es
+        // ******************
+        // TO BE UPDATED SOON!
+        // ******************
+        for (let i = 0; i < cantidadMeses; i++) {
+            if (modoOp == "mesAmes") {
+                mes = new Mes(fechaAux.getMonth() + 1, 1, meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
+            } else if (modoOp == "desdeHoy") {
+                // para las operaciones de este tipo se consideran 31 días o más..
+                // no se tienen en cuenta feriados ni fines de semana.
+                mes = new Mes(fechaAux.getMonth() + 1, fechaAux.getDate(), meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
             }
-            return true;
+            op = new Operacion(mes);
+            usuario.operaciones.push(op);
+            fechaAux.setDate(fechaAux.getDate() + 31);
         }
+        return true;
+
     } catch (error) {
         console.error("Error:", error.message);
     }
@@ -114,10 +73,21 @@ const button = document.getElementById("mainButton");
 // Obtener los "metodos" de radio
 var radioButtons = document.getElementsByName("metodo");
 
+// Obtener los "modos" de radio
+var radioButtons2 = document.getElementsByName("modo");
+
 // Recorrer los elementos de radio y aplicar el evento de cambio a cada uno
 radioButtons.forEach(function (radioButton) {
     radioButton.addEventListener("change", function () {
         metodo = document.querySelector('input[name="metodo"]:checked').value;
+        // console.log("Seleccionaste: " + selectedValue);
+    });
+});
+
+// Recorrer los elementos de radio y aplicar el evento de cambio a cada uno
+radioButtons.forEach(function (radioButton2) {
+    radioButton2.addEventListener("change", function () {
+        modoOp = document.querySelector('input[name="modo"]:checked').value;
         // console.log("Seleccionaste: " + selectedValue);
     });
 });

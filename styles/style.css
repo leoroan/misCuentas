@@ -347,7 +347,7 @@ header .fw-light {
 }
 
 .card {
-  margin: 35px 10px 35px 10px;
+  margin: 35px 10px 25px 10px;
   box-shadow: 2px 2px 4px 2px rgba(253, 253, 253, 0.3), 2px 2px 4px 2px rgba(253, 253, 253, 0.3);
   border-radius: 15px !important;
   font-size: 1.25rem;
@@ -367,6 +367,9 @@ header .fw-light {
   text-align: center;
 }
 
+.tarjetaPrincipal {
+  min-height: 150px !important;
+}
 .tarjetaPrincipal p {
   font-style: italic;
   font-weight: 700;
@@ -378,6 +381,22 @@ header .fw-light {
 
 #cardResultDisplay {
   display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.lateral {
+  min-height: 400px;
+  max-height: 450px;
+  overflow: auto;
+}
+.lateral h4 {
+  font-size: x-large;
+  font-weight: 900;
 }
 
 footer {
