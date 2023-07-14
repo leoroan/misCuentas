@@ -104,7 +104,6 @@ class Persona {
     return ops.filter(op => op.devolverMes().getAnioMes() >= anio);
   }
 
-
   /**
    * @returns un array con operaciones.
    */
