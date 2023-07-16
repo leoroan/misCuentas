@@ -93,6 +93,7 @@ button.addEventListener('click', function (e) {
         cardInicial.classList.add('hide');
         cardResultDisplay.style.display = 'block';
         aInvertir();
+        usuario.calcularRetornoTotal(metodo);
         mostrarTarjetas(usuario.getOperaciones());
     }
 });

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -369,10 +370,29 @@ header .fw-light {
 
 .tarjetaPrincipal {
   min-height: 150px !important;
+  max-height: 500px !important;
+  overflow: scroll;
+  scrollbar-width: thin;
+  /* Oculta las barras de desplazamiento en Firefox */
+  -ms-overflow-style: none;
 }
 .tarjetaPrincipal p {
   font-style: italic;
   font-weight: 700;
+}
+
+/* Estilos específicos para WebKit (Chrome, Safari, Opera) */
+.tarjetaPrincipal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tarjetaPrincipal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tarjetaPrincipal::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
 }
 
 .hide {
