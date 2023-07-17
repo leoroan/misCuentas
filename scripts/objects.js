@@ -1,11 +1,12 @@
 
 class Mes {
-  constructor(numeroMes, numeroDia, nombreMes, numeroAnio, tasaInflacion = 0, inversion = 0, tasaMensual) {
+  meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+  constructor(fecha, tasaInflacion = 0, inversion = 0, tasaMensual) {
     this.icono = "💵";
-    this.nombreMes = nombreMes;
-    this.numeroDia = numeroDia;
-    this.numeroMes = numeroMes;
-    this.numeroAnio = numeroAnio;
+    this.dia = fecha.getDate();
+    this.mes = fecha.getMonth();
+    this.anio = fecha.getFullYear();
     this.tasaInflacion = tasaInflacion;
     this.inversion = inversion;
     this.tasaMensual = tasaMensual;
@@ -15,11 +16,26 @@ class Mes {
 
   // setters & getters
   getNombreMes() {
-    return this.nombreMes;
+    return this.meses[this.mes];
   }
 
-  getAnioMes() {
-    return this.numeroAnio;
+  getNumeroDia(){
+    return this.dia;
+  }
+
+  getAnio() {
+    return this.anio;
+  }
+
+  getMesNumero() {
+    return this.mes;
+  }
+  /**
+   * Devuelve la suma del dia, mes y año -1
+   * @returns Number
+   */
+  getFecha(){
+    return this.dia + this.mes + this.anio;
   }
 
   getInversion() {
@@ -29,13 +45,17 @@ class Mes {
   setInversion(monto) {
     this.inversion = monto;
   }
+
+  getTasaMensual() {
+    return this.tasaMensual;
+  }
 }
 class Operacion {
   constructor(Mes) {
     this.mes = Mes;
   }
 
-  devolverMes() { //getMes()
+  getMes() {
     return this.mes;
   }
 
@@ -44,7 +64,7 @@ class Operacion {
    * @returns  Number
    */
   calcularRetornoPorMes() {
-    return Number(((this.mes.tasaMensual / 100) * (Number(this.mes.inversion))).toFixed(2));
+    return Number(((this.mes.getTasaMensual() / 100) * (Number(this.mes.getInversion()))).toFixed(2));
   }
 
   /**
@@ -62,19 +82,22 @@ class Persona {
   }
 
   saludar() {
-    console.log(`Hola, mi nombre es ${this.nombre}.`);
+    console.log(`Hola, mi nombre es ${this.getName()}.`);
   }
 
   getName() {
     return this.nombre;
   }
 
+  /**
+   * @returns un array con operaciones.
+   */
   getOperaciones() {
-    return this.operaciones();
+    return this.operaciones;
   }
 
   buscarMesPorNumeroMes(numeroMes) {
-    const pos = this.operaciones.findIndex(m => m.devolverMes().numeroMes === numeroMes);
+    const pos = this.getOperaciones().findIndex(op => op.getMes().getMesNumero() === numeroMes);
     return this.operaciones[pos];
   }
 
@@ -86,7 +109,7 @@ class Persona {
   buscarMesPorNombreMes(nombreMes) {
     const operacionesEncontradas = [];
     for (let i = 0; i < this.getOperaciones().length; i++) {
-      const mes = this.getOperaciones()[i].devolverMes();
+      const mes = this.getOperaciones()[i].getMes();
       if (mes.getNombreMes() === nombreMes || mes.getNombreMes().includes(nombreMes)) {
         operacionesEncontradas.push(this.getOperaciones()[i]);
       }
@@ -101,17 +124,10 @@ class Persona {
    */
   filtrarOperacionesPorAnio(anio) {
     const ops = this.getOperaciones();
-    return ops.filter(op => op.devolverMes().getAnioMes() >= anio);
+    return ops.filter(op => op.getMes().getAnioMes() >= anio);
   }
 
-  /**
-   * @returns un array con operaciones.
-   */
-  getOperaciones() {
-    return this.operaciones;
-  }
-
-  calcularRetornoTotalPorMes() {
+  calcularRetornoPorMes() {
     let suma = 0;
     this.operaciones.forEach(op => {
       suma += op.calcularRetornoPorMes();
@@ -124,15 +140,15 @@ class Persona {
    * y la retorna. tiene en cuenta si es primer mes o siguiente. 
    * @returns Float
    */
-  calcularRetornoTotalAcumulado() {
+  calcularRetornoAcumulado() {
     let suma = 0;
-    let opAnt = this.operaciones[0];
+    let opAnt = this.getOperaciones()[0];
     this.operaciones.forEach(op => {
       // si es el primer mes del cálculo
-      if (opAnt.devolverMes().getNombreMes() === op.devolverMes().getNombreMes()) {
+      if (opAnt.getMes().getNombreMes() === op.getMes().getNombreMes()) {
         suma += op.calcularRetornoPorMes();
       } else {
-        op.devolverMes().setInversion(Number(opAnt.devolverMes().getInversion()) + Number(opAnt.calcularRetornoPorMes()));
+        op.getMes().setInversion(Number(opAnt.getMes().getInversion()) + Number(opAnt.calcularRetornoPorMes()));
         suma += op.calcularRetornoPorMes();
       }
       opAnt = op;
@@ -147,13 +163,13 @@ class Persona {
    * @param {String} metodo 
    * @returns {Float}
    */
-  calcularRetornoTotal(metodo) {
+  calcularRetorno(metodo) {
     let suma = 0;
     if (this.operaciones.length !== 0) {
       if (metodo == "porMes") {
-        suma = this.calcularRetornoTotalPorMes();
+        suma = this.calcularRetornoPorMes();
       } else { // sies interes compuesto...
-        suma = this.calcularRetornoTotalAcumulado();
+        suma = this.calcularRetornoAcumulado();
       }
     }
     return parseFloat(suma).toFixed(2);

@@ -10,7 +10,6 @@ const dolarBlue = 0;
 const usuario = new Persona();
 
 ///////////////////////////// variables
-var meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 let tasaMensual = Number(((tasaAnual * 8.21918) / 100).toFixed(6));
 let cantidadBasePromedio = 9999;
 let cantidadInvertida = 0;
@@ -30,7 +29,7 @@ function aInvertir() {
         let cantidadMeses = document.getElementById("plazoInput").value;
         let fechaAux = new Date();
         for (let i = 0; i < cantidadMeses; i++) {
-            let mes = new Mes(fechaAux.getMonth() + 1, fechaAux.getDate(), meses[fechaAux.getMonth()], fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
+            let mes = new Mes(fechaAux, indiceInflacion, cantidadInvertida, tasaMensual);
             let op = new Operacion(mes);
             usuario.operaciones.push(op);
             fechaAux.setDate(fechaAux.getDate() + 31);
@@ -93,7 +92,9 @@ button.addEventListener('click', function (e) {
         cardInicial.classList.add('hide');
         cardResultDisplay.style.display = 'block';
         aInvertir();
-        usuario.calcularRetornoTotal(metodo);
+        usuario.calcularRetorno(metodo);
+        console.log("tot ", usuario.calcularRetorno(metodo));
+        console.log("tot ", Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
         mostrarTarjetas(usuario.getOperaciones());
     }
 });
@@ -103,8 +104,8 @@ function crearTarjeta(op) {
     <div class="col-md-auto animate__animated animate__bounce">
     <div class="card border-light bg-transparent">
         <div class="card-body">
-            <h4 class="card-title"> ${op.devolverMes().getNombreMes().toUpperCase()} ${op.devolverMes().getAnioMes()} </h4>
-            <p> Invertido este mes: $${op.devolverMes().getInversion()}</p>
+            <h4 class="card-title"> ${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()} </h4>
+            <p> Invertido este mes: $${op.getMes().getInversion()}</p>
             <p> Retorno este mes: $${op.calcularRetornoPorMes()}</p>
             <p> Metodo: ${metodo}</p>
         </div>
