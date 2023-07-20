@@ -42,6 +42,20 @@ function aInvertir() {
 
 ////////////////////  SegundaPartes o 3er Entrega
 
+// Hacerle "focus" al input
+function scrollToComponent(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Al cargar la página
+window.onload = function () {
+    scrollToComponent('montoInput');
+};
+
+
 // Obtener el cuerpo de la tarjeta de resultado 
 const cardResultDisplay = document.getElementById("cardResultDisplay");
 
@@ -51,22 +65,14 @@ const button = document.getElementById("mainButton");
 // Obtener los "metodos" de radio
 var radioButtons = document.getElementsByName("metodo");
 
-// Obtener los "modos" de radio
-var radioButtons2 = document.getElementsByName("modo");
+// Modificar card de resultados
+const cardOptiones = document.getElementById("cardOptions");
 
 // Recorrer los elementos de radio y aplicar el evento de cambio a cada uno
 radioButtons.forEach(function (radioButton) {
     radioButton.addEventListener("change", function () {
         metodo = document.querySelector('input[name="metodo"]:checked').value;
-        // console.log("Seleccionaste: " + selectedValue);
-    });
-});
-
-// Recorrer los elementos de radio y aplicar el evento de cambio a cada uno
-radioButtons.forEach(function (radioButton2) {
-    radioButton2.addEventListener("change", function () {
-        modoOp = document.querySelector('input[name="modo"]:checked').value;
-        // console.log("Seleccionaste: " + selectedValue);
+        cardOptiones.innerHTML = metodo === "intCompuesto" ? "MÉTODO: INTERES COMPUESTO" : "MÉTODO: POR MES ";
     });
 });
 
@@ -80,37 +86,50 @@ function checkPlazo(unValor) {
 button.addEventListener('click', function (e) {
     e.preventDefault();
     const montoInput = document.getElementById("montoInput");
+    const radioInput = document.getElementById("radioOptionCard");
     const plazoInput = document.getElementById("plazoInput");
     let cardBienvenida = document.getElementById("cardBienvenida");
     let cardInicial = document.getElementById("cardInicial");
+    const selectedRadio = document.querySelector('input[name="metodo"]:checked');
 
-    if (checkMonto(montoInput.value) || checkPlazo(plazoInput.value)) {
+    if (checkMonto(montoInput.value) || checkPlazo(plazoInput.value) || !selectedRadio) {
         montoInput.classList.add("is-invalid");
         plazoInput.classList.add("is-invalid");
+        radioInput.classList.add("is-invalid");
     } else {
         cardBienvenida.classList.add('hide');
         cardInicial.classList.add('hide');
         cardResultDisplay.style.display = 'block';
         aInvertir();
         usuario.calcularRetorno(metodo);
-        console.log("tot ", usuario.calcularRetorno(metodo));
-        console.log("tot ", Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
+        const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
+        const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
+
+        cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
+                                   <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
+                                  `;
         mostrarTarjetas(usuario.getOperaciones());
     }
 });
 
 function crearTarjeta(op) {
+    const fomatoMoney = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(op.calcularRetornoPorMes());
     return `
     <div class="col-md-auto animate__animated animate__bounce">
     <div class="card border-light bg-transparent">
         <div class="card-body">
             <h4 class="card-title"> ${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()} </h4>
-            <p> Invertido este mes: $${op.getMes().getInversion()}</p>
-            <p> Retorno este mes: $${op.calcularRetornoPorMes()}</p>
-            <p> Metodo: ${metodo}</p>
+            <p> Retorno este mes: ${fomatoMoney} 💵</p> 
         </div>
     </div>
     </div>`;
+
+    // esto para mostrar en un "acercamiento"
+
+    // <h4 class="card-title"> ${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()} </h4>
+    //         <p> Invertido este mes: $${op.getMes().getInversion()}</p>
+    //         <p> Retorno este mes: $${op.calcularRetornoPorMes()}</p>
+    //         <p> Metodo: ${metodo}</p>
 }
 
 function mostrarTarjetas(operaciones) {
