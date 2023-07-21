@@ -19,7 +19,7 @@ class Mes {
     return this.meses[this.mes];
   }
 
-  getNumeroDia(){
+  getNumeroDia() {
     return this.dia;
   }
 
@@ -34,7 +34,7 @@ class Mes {
    * Devuelve la suma del dia, mes y año -1
    * @returns Number
    */
-  getFecha(){
+  getFecha() {
     return this.dia + this.mes + this.anio;
   }
 
@@ -175,6 +175,16 @@ class Persona {
     return parseFloat(suma).toFixed(2);
   }
 
+  // Guardar LocalStorage
+  saveToLocalStorage() {
+    const personaJSON = JSON.stringify(this);
+    localStorage.setItem("persona", personaJSON);
+  }
+
+  // Borrar LocalStorage
+  eraseSavedData() {
+    localStorage.removeItem("persona");
+  }
 
 
 }
