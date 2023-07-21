@@ -7,7 +7,7 @@ const canastaBasica = 0;
 const indiceInflacion = 1;
 const dolarOficial = 0;
 const dolarBlue = 0;
-const usuario = new Persona();
+let usuario = new Persona();
 
 ///////////////////////////// variables
 let tasaMensual = Number(((tasaAnual * 8.21918) / 100).toFixed(6));
@@ -34,6 +34,7 @@ function aInvertir() {
             usuario.operaciones.push(op);
             fechaAux.setDate(fechaAux.getDate() + 31);
         }
+        // usuario.saveToLocalStorage();
     } catch (error) {
         console.error("Error:", error.message);
     }
@@ -61,18 +62,20 @@ const cardResultDisplay = document.getElementById("cardResultDisplay");
 
 // Obtener el botón por su ID
 const button = document.getElementById("mainButton");
+const buttonClear = document.getElementById("btnClear");
+
 
 // Obtener los "metodos" de radio
 var radioButtons = document.getElementsByName("metodo");
 
 // Modificar card de resultados
 const cardOptiones = document.getElementById("cardOptions");
+cardOptiones.innerHTML += metodo === "intCompuesto" ? "MÉTODO: INTERES COMPUESTO" : "MÉTODO: POR MES ";
 
 // Recorrer los elementos de radio y aplicar el evento de cambio a cada uno
 radioButtons.forEach(function (radioButton) {
     radioButton.addEventListener("change", function () {
         metodo = document.querySelector('input[name="metodo"]:checked').value;
-        cardOptiones.innerHTML = metodo === "intCompuesto" ? "MÉTODO: INTERES COMPUESTO" : "MÉTODO: POR MES ";
     });
 });
 
@@ -102,9 +105,9 @@ button.addEventListener('click', function (e) {
         cardResultDisplay.style.display = 'block';
         aInvertir();
         usuario.calcularRetorno(metodo);
+        usuario.saveToLocalStorage();
         const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
         const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
-
         cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
                                    <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
                                   `;
@@ -114,12 +117,14 @@ button.addEventListener('click', function (e) {
 
 function crearTarjeta(op) {
     const fomatoMoney = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(op.calcularRetornoPorMes());
+    const id = op.getMes().getMesNumero() + op.getMes().getAnio();
     return `
     <div class="col-md-auto animate__animated animate__bounce">
     <div class="card border-light bg-transparent">
         <div class="card-body">
             <h4 class="card-title"> ${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()} </h4>
             <p> Retorno este mes: ${fomatoMoney} 💵</p> 
+            <button id="${id}" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cardModal">+</button>
         </div>
     </div>
     </div>`;
@@ -139,4 +144,85 @@ function mostrarTarjetas(operaciones) {
         tarjetas += crearTarjeta(op);
     });
     contenedorTarjetas.innerHTML = tarjetas;
+}
+
+
+buttonClear.addEventListener('click', function () {
+    alertBorrar();
+});
+
+function alertBorrar() {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: 'Estas seguro de borrarlo?',
+        text: "Esta accion no se puede revertir!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: ' BORRAR ',
+        cancelButtonText: ' CANCELAR ',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            swalWithBootstrapButtons.fire(
+                'Tu calculo de inversion!',
+                'fue borrado!',
+                'success',
+                cardResultDisplay.style.display = 'none',
+                setTimeout(function () {
+                    window.location.href = "index.html";
+                }, 2000)
+            )
+            usuario.eraseSavedData();
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire(
+                'No se borró nada!',
+                "",
+                'error'
+            )
+        }
+    })
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (checkLocalStorage()) {
+        cardBienvenida.classList.add('hide');
+        cardInicial.classList.add('hide');
+        cardResultDisplay.style.display = 'block';
+        // usuario.calcularRetorno(metodo);
+        // const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
+        // const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
+        // cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
+        //                            <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
+        //                           `;
+        console.log("operaciones ", usuario.getOperaciones());
+        mostrarTarjetas(usuario.getOperaciones());
+    }
+});
+
+/**
+ * Devuelve si hay datos en el LocalStorage y los carga
+ * @returns boolean
+ */
+function checkLocalStorage() {
+    const storedData = localStorage.getItem("persona");
+    if (storedData !== null) {
+        // loadFromLocalStorage(storedData);
+        const personaData = JSON.parse(storedData);
+        const usr = new Persona();
+        usr.nombre = personaData.nombre;
+        usr.operaciones = personaData.operaciones;
+        usuario = usr;
+        // console.log("Data exists:", usuario);
+        return true;
+    } else {
+        console.log("LocalStorage vacío");
+        return false;
+    }
 }
