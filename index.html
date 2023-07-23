@@ -48,9 +48,31 @@
                 </header>
                 <!-- HEADER END -->
 
-               
-
                 <!-- CARD MODAL START -->
+                <div class="modal fade" id="optionsModal" tabindex="-1" aria-labelledby="optionsModal"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">BUSCAR O FILTRAR</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">BUSCAR</span>
+                                    <input id="inputBuscarMes" type="text" class="form-control"
+                                        placeholder="Buscar por nombre de mes" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">FILTRAR</span>
+                                    <input id="inputFiltroAnio" type="text" class="form-control"
+                                        placeholder="Filtrar operaciones por año" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="Modals"></div>
                 <!-- CARD MODAL END -->
 
@@ -145,10 +167,15 @@
                                 <div class="card-body">
                                     <h2 class="card-title" id="toppp"> RESULTADOS 💰</h2>
                                     <div id="cardOptions"></div>
-                                    <button id="btnClear" type="button"
-                                        class="btn btn-danger mt-2">REINICIAR!</button>
+                                    <div id="buttons"><button id="btnClear" type="button"
+                                            class="btn btn-danger mt-2">REINICIAR!</button>
+                                        <button id="btnBuscar" type="button" class="btn btn-warning mt-2"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#optionsModal">BUSCAR/FILTRAR</button>
+                                    </div>
                                     <div id="cardMes" class="row justify-content-md-center"></div>
-                                    <button class="btn btn-success mt-2"><a href="#toppp" id="goTopButton">goTop!</a></button>
+                                    <button class="btn btn-info mt-2"><a href="#toppp"
+                                            id="goTopButton">goTop!</a></button>
                                 </div>
                             </div>
                         </div>

@@ -83,7 +83,7 @@ function checkMonto(unValor) {
     return unValor === 0;
 }
 function checkPlazo(unValor) {
-    return (unValor <= 0 || unValor >= 36);
+    return (unValor <= 0 || unValor > 36);
 }
 
 button.addEventListener('click', function (e) {
@@ -125,7 +125,7 @@ function crearTarjeta(op) {
         <div class="card-body">
             <h4 class="card-title"> ${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()} </h4>
             <p> Retorno este mes: ${fomatoMoney} 💵</p> 
-            <button id="${id}" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#${id}">+</button>
+            <button id="${id}" type="button" class="btn btn-outline-success btn-sm fs-5" data-bs-toggle="modal" data-bs-target="#${id}"> saber + </button>
         </div>
     </div>
     </div>`;
@@ -264,3 +264,66 @@ function checkLocalStorage() {
         return false;
     }
 }
+
+// Obtener los inputros x dom.
+const inputBuscarMes = document.getElementById("inputBuscarMes");
+const inputFiltroAnio = document.getElementById("inputFiltroAnio");
+
+//
+
+// Get the elements
+const buttonsContainer = document.getElementById("buttons");
+
+// Function to handle the reset action
+const handleReset = () => {
+    // Clear the input value
+    inputBuscarMes.value = "";
+    inputFiltroAnio.value = "";
+
+    // Remove the reset button
+    const resetButton = document.getElementById("resetButton");
+    if (resetButton) {
+        resetButton.remove();
+    }
+};
+
+// Attach the event listener to the reset button (using event delegation)
+buttonsContainer.addEventListener("click", (event) => {
+    if (event.target.id === "resetButton") {
+        handleReset();
+    }
+});
+
+
+// Function to handle the "keydown" event
+const busqueda = (event) => {
+    // Check if the "Enter" key is pressed (key code 13)
+    if (event.keyCode === 13) {
+        // Create the reset button
+        const resetButton = document.createElement("button");
+        resetButton.textContent = "Reset";
+        resetButton.id = "resetButton";
+        buttonsContainer.appendChild(resetButton);
+
+        const numeroMes = event.target.value;
+        console.log(usuario.buscarMesPorNombreMes(numeroMes));
+        mostrarTarjetas(usuario.buscarMesPorNombreMes(numeroMes));
+    }
+};
+
+// Function to handle the "keydown" event
+const filtro = (event) => {
+    // Check if the "Enter" key is pressed (key code 13)
+    if (event.keyCode === 13) {
+        const numeroMes = event.target.value;
+        console.log(usuario.filtrarOperacionesPorAnio(numeroMes));
+        mostrarTarjetas(usuario.filtrarOperacionesPorAnio(numeroMes));
+    }
+};
+
+// Attach the event listener to the input element
+inputBuscarMes.addEventListener("keydown", busqueda);
+inputFiltroAnio.addEventListener("keydown", filtro);
+
+
+

@@ -144,7 +144,7 @@ class Persona {
    */
   filtrarOperacionesPorAnio(anio) {
     const ops = this.getOperaciones();
-    return ops.filter(op => op.getMes().getAnioMes() >= anio);
+    return ops.filter(op => op.getMes().getAnio() == anio );
   }
 
   calcularRetornoPorMes() {
