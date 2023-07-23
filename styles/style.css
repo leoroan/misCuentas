@@ -421,4 +421,10 @@ input::-webkit-inner-spin-button {
 
 footer {
   margin: 10px 0 10px 0;
+}
+
+a {
+  text-decoration: none !important;
+  font-size: larger;
+  color: black !important;
 }/*# sourceMappingURL=style.css.map */

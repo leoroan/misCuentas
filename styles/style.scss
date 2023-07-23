@@ -6,3 +6,8 @@
 @import "_cards.scss";
 @import "_footer.scss";
 
+a {
+  text-decoration: none !important;
+  font-size: larger;
+  color: black !important;
+}

@@ -49,6 +49,18 @@ class Mes {
   getTasaMensual() {
     return this.tasaMensual;
   }
+
+  toString = function () {
+  return `
+      ${this.icono}
+      Fecha inversion: ${this.dia}/${this.mes}/${this.anio} <br>\n
+      Tasa de inflación: ${this.tasaInflacion}%<br>\n
+      Inversión: ${this.inversion}<br>\n
+      Tasa mensual: ${this.tasaMensual}%<br>\n
+      Porcentaje de relación con ingresos: ${this.porcentajeRelacionIngreso}%<br>\n
+      Porcentaje de relación con inflación: ${this.porcentajeRelacionInflacion}%<br>\n
+    `;
+};
 }
 class Operacion {
   constructor(Mes) {
@@ -71,7 +83,7 @@ class Operacion {
    * @returns {string} 
    */
   toString() {
-    return `Este mes: ${this.mes.getNombreMes()}, invirtiendo: $${this.mes.getInversion()}, obtiene de retorno: $${this.calcularRetornoPorMes()}`;
+    return `En el mes de: ${this.mes.getNombreMes()}, invirtiendo: $${this.mes.getInversion()}, obtiene de retorno: $${this.calcularRetornoPorMes()}`;
   }
 }
 

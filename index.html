@@ -48,26 +48,10 @@
                 </header>
                 <!-- HEADER END -->
 
+               
+
                 <!-- CARD MODAL START -->
-                <div class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                ...
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="Modals"></div>
                 <!-- CARD MODAL END -->
 
                 <!-- MAIN BOX START -->
@@ -159,11 +143,12 @@
                         <div class="col-md-auto animate__animated animate__bounce">
                             <div class="card border-light bg-transparent tarjetaPrincipal">
                                 <div class="card-body">
-                                    <h2 class="card-title"> RESULTADOS 💰</h2>
+                                    <h2 class="card-title" id="toppp"> RESULTADOS 💰</h2>
                                     <div id="cardOptions"></div>
                                     <button id="btnClear" type="button"
-                                        class="btn btn-outline-danger mt-2">BORRAR</button>
+                                        class="btn btn-danger mt-2">REINICIAR!</button>
                                     <div id="cardMes" class="row justify-content-md-center"></div>
+                                    <button class="btn btn-success mt-2"><a href="#toppp" id="goTopButton">goTop!</a></button>
                                 </div>
                             </div>
                         </div>

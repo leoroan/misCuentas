@@ -112,29 +112,55 @@ button.addEventListener('click', function (e) {
                                    <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
                                   `;
         mostrarTarjetas(usuario.getOperaciones());
+        crearTarjetaInfoAdicional(usuario.getOperaciones());
     }
 });
 
 function crearTarjeta(op) {
     const fomatoMoney = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(op.calcularRetornoPorMes());
-    const id = op.getMes().getMesNumero() + op.getMes().getAnio();
+    const id = "cardModal" + usuario.operaciones.indexOf(op);
     return `
     <div class="col-md-auto animate__animated animate__bounce">
     <div class="card border-light bg-transparent">
         <div class="card-body">
             <h4 class="card-title"> ${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()} </h4>
             <p> Retorno este mes: ${fomatoMoney} 💵</p> 
-            <button id="${id}" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cardModal">+</button>
+            <button id="${id}" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#${id}">+</button>
         </div>
     </div>
     </div>`;
+}
 
-    // esto para mostrar en un "acercamiento"
+function crearModals(op) {
+    const id = "cardModal" + usuario.operaciones.indexOf(op);
+    return `<div class="modal fade" id="${id}" tabindex="-1" aria-labelledby="ModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm">
+                        <div class="modal-content border-light">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()}</h1>
+                            </div>
+                            <div class="modal-body">
+                            ${op.getMes().toString()}
+                            <br>
+                            ${op.toString()}
+                            </div>
+                            <div class="modal-footer">
+                                misCuentas.com
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+}
 
-    // <h4 class="card-title"> ${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()} </h4>
-    //         <p> Invertido este mes: $${op.getMes().getInversion()}</p>
-    //         <p> Retorno este mes: $${op.calcularRetornoPorMes()}</p>
-    //         <p> Metodo: ${metodo}</p>
+
+function crearTarjetaInfoAdicional(operaciones) {
+    let contenedorModal = document.getElementById("Modals");
+    let modales = "";
+    operaciones.forEach(op => {
+        modales += crearModals(op);
+    });
+    contenedorModal.innerHTML = modales;
 }
 
 function mostrarTarjetas(operaciones) {
@@ -151,6 +177,9 @@ buttonClear.addEventListener('click', function () {
     alertBorrar();
 });
 
+/**
+ * 
+ */
 function alertBorrar() {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -190,6 +219,11 @@ function alertBorrar() {
     })
 }
 
+
+/**
+ * Funcion que permite, al cargar la pagina, chequear si el local storage tiene "algo",
+ * en caso afirmativo procede a la carga de los datos para visualizarlos.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     if (checkLocalStorage()) {
         cardBienvenida.classList.add('hide');
@@ -202,6 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
         //                            <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
         //                           `;
         mostrarTarjetas(usuario.getOperaciones());
+        crearTarjetaInfoAdicional(usuario.getOperaciones());
     }
 });
 
@@ -220,7 +255,7 @@ function checkLocalStorage() {
         personaData.operaciones.forEach(op => {
             m = Object.assign(new Mes(), op.mes);
             o = Object.assign(new Operacion(m));
-            usuario.agregarOperacion(o);           
+            usuario.agregarOperacion(o);
         });
         console.log("Data existente:", usuario);
         return true;
