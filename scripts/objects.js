@@ -2,11 +2,11 @@
 class Mes {
   meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
-  constructor(fecha, tasaInflacion = 0, inversion = 0, tasaMensual) {
+  constructor(dia, mes, anio, tasaInflacion = 0, inversion = 0, tasaMensual) {
     this.icono = "💵";
-    this.dia = fecha.getDate();
-    this.mes = fecha.getMonth();
-    this.anio = fecha.getFullYear();
+    this.dia = dia;
+    this.mes = mes;
+    this.anio = anio;
     this.tasaInflacion = tasaInflacion;
     this.inversion = inversion;
     this.tasaMensual = tasaMensual;
@@ -94,6 +94,14 @@ class Persona {
    */
   getOperaciones() {
     return this.operaciones;
+  }
+
+  setOperaciones(operaciones) {
+    this.operaciones = operaciones;
+  }
+
+  agregarOperacion(op) {
+    this.operaciones.push(o);
   }
 
   buscarMesPorNumeroMes(numeroMes) {

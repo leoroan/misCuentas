@@ -29,7 +29,7 @@ function aInvertir() {
         let cantidadMeses = document.getElementById("plazoInput").value;
         let fechaAux = new Date();
         for (let i = 0; i < cantidadMeses; i++) {
-            let mes = new Mes(fechaAux, indiceInflacion, cantidadInvertida, tasaMensual);
+            let mes = new Mes(fechaAux.getDate(), fechaAux.getMonth(), fechaAux.getFullYear(), indiceInflacion, cantidadInvertida, tasaMensual);
             let op = new Operacion(mes);
             usuario.operaciones.push(op);
             fechaAux.setDate(fechaAux.getDate() + 31);
@@ -201,7 +201,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
         //                            <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
         //                           `;
-        console.log("operaciones ", usuario.getOperaciones());
         mostrarTarjetas(usuario.getOperaciones());
     }
 });
@@ -217,12 +216,16 @@ function checkLocalStorage() {
         const personaData = JSON.parse(storedData);
         const usr = new Persona();
         usr.nombre = personaData.nombre;
-        usr.operaciones = personaData.operaciones;
         usuario = usr;
-        // console.log("Data exists:", usuario);
+        personaData.operaciones.forEach(op => {
+            m = Object.assign(new Mes(), op.mes);
+            o = Object.assign(new Operacion(m));
+            usuario.agregarOperacion(o);           
+        });
+        console.log("Data existente:", usuario);
         return true;
     } else {
-        console.log("LocalStorage vacío");
+        console.log("LocalStorage está vacío");
         return false;
     }
 }
