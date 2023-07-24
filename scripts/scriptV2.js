@@ -265,15 +265,6 @@ function checkLocalStorage() {
     }
 }
 
-// Obtener los inputros x dom.
-const inputBuscarMes = document.getElementById("inputBuscarMes");
-const inputFiltroAnio = document.getElementById("inputFiltroAnio");
-inputBuscarMes.addEventListener("keydown", busqueda);
-inputFiltroAnio.addEventListener("keydown", filtro);
-
-// Obtener el contenedor de botones
-const buttonsContainer = document.getElementById("buttons");
-
 /**
  * Manejar el reset
  */
@@ -288,12 +279,6 @@ const buttonsContainer = document.getElementById("buttons");
 //     }
 // };
 
-// Attach the event listener to the reset button (using event delegation)
-buttonsContainer.addEventListener("click", (event) => {
-    if (event.target.id === "resetButton") {
-        handleReset();
-    }
-});
 
 
 /**
@@ -313,7 +298,6 @@ const busqueda = (event) => {
  * @param {*} event 
  */
 const filtro = (event) => {
-    // Check if the "Enter" key is pressed (key code 13)
     if (event.keyCode === 13) {
         const numeroMes = event.target.value;
         console.log(usuario.filtrarOperacionesPorAnio(numeroMes));
@@ -321,8 +305,23 @@ const filtro = (event) => {
     }
 };
 
+// Obtener los inputs x dom.
+const inputBuscarMes = document.getElementById("inputBuscarMes");
+const inputFiltroAnio = document.getElementById("inputFiltroAnio");
+inputBuscarMes.addEventListener("keydown", busqueda);
+inputFiltroAnio.addEventListener("keydown", filtro);
 
+// Obtener el contenedor de botones
+const buttonsContainer = document.getElementById("buttons");
 
+/**
+ * Escuchar el evento "click" del boton reset.
+ */
+buttonsContainer.addEventListener("click", (event) => {
+    if (event.target.id === "resetButton") {
+        handleReset();
+    }
+});
 
 
 
