@@ -70,12 +70,13 @@ var radioButtons = document.getElementsByName("metodo");
 
 // Modificar card de resultados
 const cardOptiones = document.getElementById("cardOptions");
-cardOptiones.innerHTML += metodo === "intCompuesto" ? "MÉTODO: INTERES COMPUESTO" : "MÉTODO: POR MES ";
+
 
 // Recorrer los elementos de radio y aplicar el evento de cambio a cada uno
 radioButtons.forEach(function (radioButton) {
     radioButton.addEventListener("change", function () {
         metodo = document.querySelector('input[name="metodo"]:checked').value;
+        cardOptiones.innerHTML += metodo === "intCompuesto" ? "MÉTODO: INTERES COMPUESTO" : "MÉTODO: POR MES ";
     });
 });
 
