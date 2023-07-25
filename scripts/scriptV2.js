@@ -70,12 +70,13 @@ var radioButtons = document.getElementsByName("metodo");
 
 // Modificar card de resultados
 const cardOptiones = document.getElementById("cardOptions");
-cardOptiones.innerHTML += metodo === "intCompuesto" ? "MÉTODO: INTERES COMPUESTO" : "MÉTODO: POR MES ";
+
 
 // Recorrer los elementos de radio y aplicar el evento de cambio a cada uno
 radioButtons.forEach(function (radioButton) {
     radioButton.addEventListener("change", function () {
         metodo = document.querySelector('input[name="metodo"]:checked').value;
+        cardOptiones.innerHTML += metodo === "intCompuesto" ? "MÉTODO: INTERES COMPUESTO" : "MÉTODO: POR MES ";
     });
 });
 
@@ -265,55 +266,39 @@ function checkLocalStorage() {
     }
 }
 
-// Obtener los inputros x dom.
-const inputBuscarMes = document.getElementById("inputBuscarMes");
-const inputFiltroAnio = document.getElementById("inputFiltroAnio");
+/**
+ * Manejar el reset
+ */
+// const handleReset = () => {
+//     inputBuscarMes.value = "";
+//     inputFiltroAnio.value = "";
 
-//
-
-// Get the elements
-const buttonsContainer = document.getElementById("buttons");
-
-// Function to handle the reset action
-const handleReset = () => {
-    // Clear the input value
-    inputBuscarMes.value = "";
-    inputFiltroAnio.value = "";
-
-    // Remove the reset button
-    const resetButton = document.getElementById("resetButton");
-    if (resetButton) {
-        resetButton.remove();
-    }
-};
-
-// Attach the event listener to the reset button (using event delegation)
-buttonsContainer.addEventListener("click", (event) => {
-    if (event.target.id === "resetButton") {
-        handleReset();
-    }
-});
+//     // Remove the reset button
+//     const resetButton = document.getElementById("resetButton");
+//     if (resetButton) {
+//         resetButton.remove();
+//     }
+// };
 
 
-// Function to handle the "keydown" event
+
+/**
+ * Escuchar si presiona enter en busqueda
+ * @param {*} event 
+ */
 const busqueda = (event) => {
-    // Check if the "Enter" key is pressed (key code 13)
     if (event.keyCode === 13) {
-        // Create the reset button
-        const resetButton = document.createElement("button");
-        resetButton.textContent = "Reset";
-        resetButton.id = "resetButton";
-        buttonsContainer.appendChild(resetButton);
-
         const numeroMes = event.target.value;
         console.log(usuario.buscarMesPorNombreMes(numeroMes));
         mostrarTarjetas(usuario.buscarMesPorNombreMes(numeroMes));
     }
 };
 
-// Function to handle the "keydown" event
+/**
+ * Escuchar si presiona enter en filtro
+ * @param {*} event 
+ */
 const filtro = (event) => {
-    // Check if the "Enter" key is pressed (key code 13)
     if (event.keyCode === 13) {
         const numeroMes = event.target.value;
         console.log(usuario.filtrarOperacionesPorAnio(numeroMes));
@@ -321,9 +306,23 @@ const filtro = (event) => {
     }
 };
 
-// Attach the event listener to the input element
+// Obtener los inputs x dom.
+const inputBuscarMes = document.getElementById("inputBuscarMes");
+const inputFiltroAnio = document.getElementById("inputFiltroAnio");
 inputBuscarMes.addEventListener("keydown", busqueda);
 inputFiltroAnio.addEventListener("keydown", filtro);
+
+// Obtener el contenedor de botones
+const buttonsContainer = document.getElementById("buttons");
+
+/**
+ * Escuchar el evento "click" del boton reset.
+ */
+buttonsContainer.addEventListener("click", (event) => {
+    if (event.target.id === "resetButton") {
+        handleReset();
+    }
+});
 
 
 
