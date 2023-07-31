@@ -1,5 +1,6 @@
 
 const URL_COTIZACIONES = "https://api.bluelytics.com.ar/v2/latest";
+let misCotizaciones;
 ///////////////////////////// constantes
 const tasaAnual = 97;
 const mvm = 0;
@@ -324,14 +325,14 @@ buttonsContainer.addEventListener("click", (event) => {
     }
 });
 
-async function obtenerDatos() {
-    try {
-        const response = await fetch(URL_COTIZACIONES);
 
+
+async function obtenerDatos(url) {
+    try {
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error('No se pudo obtener la información');
         }
-
         const datos = await response.json();
         return datos;
     } catch (error) {
@@ -339,4 +340,19 @@ async function obtenerDatos() {
         return null;
     }
 }
-    
+
+obtenerDatos(URL_COTIZACIONES)
+    .then(datos => {
+        if (datos) {
+            misCotizaciones = datos;
+        } else {
+            console.log('No se pudo obtener la información.');
+        }
+    })
+    .catch(error => {
+        console.error('Error al obtener los datos:', error.message);
+    });
+
+
+
+
