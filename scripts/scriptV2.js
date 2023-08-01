@@ -1,6 +1,8 @@
 
 const URL_COTIZACIONES = "https://api.bluelytics.com.ar/v2/latest";
 let misCotizaciones;
+let blue;
+let usdOficial;
 ///////////////////////////// constantes
 const tasaAnual = 97;
 const mvm = 0;
@@ -35,12 +37,10 @@ function aInvertir() {
             usuario.operaciones.push(op);
             fechaAux.setDate(fechaAux.getDate() + 31);
         }
-        // usuario.saveToLocalStorage();
     } catch (error) {
         console.error("Error:", error.message);
     }
 }
-
 
 ////////////////////  SegundaPartes o 3er Entrega
 
@@ -88,6 +88,16 @@ function checkPlazo(unValor) {
     return (unValor <= 0 || unValor > 36);
 }
 
+function escribirTarjeta() {
+    const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
+    const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
+
+    cardOptiones.innerHTML += `<br> 🔥 RETORNO DE INTERESES: ${fomatoMoney2}
+                               <br> 🔥🔥 RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
+                               <br> 🔥 VALOR DOLAR AL CAMBIO OFICIAL ACTUAL: $ ${usdOficial}\n
+                               <br> 🔥🔥🔥 VALOR DOLAR BLUE AL CAMBIO ACTUAL: $ ${blue}\n`;
+}
+
 button.addEventListener('click', function (e) {
     e.preventDefault();
     const montoInput = document.getElementById("montoInput");
@@ -133,11 +143,7 @@ button.addEventListener('click', function (e) {
         usuario.calcularRetorno(metodo);
         usuario.saveToLocalStorage();
 
-        const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
-        const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
-
-        cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
-                               <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n`;
+        escribirTarjeta();
 
         mostrarTarjetas(usuario.getOperaciones());
         crearTarjetaInfoAdicional(usuario.getOperaciones());
@@ -146,6 +152,7 @@ button.addEventListener('click', function (e) {
 
 function crearTarjeta(op) {
     const fomatoMoney = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(op.calcularRetornoPorMes());
+    const fomatoMoney2 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(op.calcularRetornoPorMes() / blue);
     const id = "cardModal" + usuario.operaciones.indexOf(op);
     return `
     <div class="col-md-auto animate__animated animate__bounce">
@@ -153,6 +160,7 @@ function crearTarjeta(op) {
         <div class="card-body">
             <h4 class="card-title"> ${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()} </h4>
             <p> Retorno este mes: ${fomatoMoney} 💵</p> 
+            <p> Retorno este mes en dólares: ${fomatoMoney2} 💸 </p> 
             <button id="${id}" type="button" class="btn btn-outline-success btn-sm fs-5" data-bs-toggle="modal" data-bs-target="#${id}"> saber + </button>
         </div>
     </div>
@@ -169,9 +177,14 @@ function crearModals(op) {
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">${op.getMes().getNombreMes().toUpperCase()} ${op.getMes().getAnio()}</h1>
                             </div>
                             <div class="modal-body">
-                            ${op.getMes().toString()}
-                            <br>
-                            ${op.toString()}
+                                ${op.getMes().toString()}
+                                <br>
+                                ${op.toString()}
+                                <br><br><br>
+                                <h6> COTIZACION HOY </h6>
+                                DOLAR BLUE: $ ${blue}
+                                <br>
+                                DOLAR OFICIAL: $ ${usdOficial}
                             </div>
                             <div class="modal-footer">
                                 misCuentas.com
@@ -257,12 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cardBienvenida.classList.add('hide');
         cardInicial.classList.add('hide');
         cardResultDisplay.style.display = 'block';
-        // usuario.calcularRetorno(metodo);
-        // const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
-        // const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
-        // cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
-        //                            <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
-        //                           `;
+        escribirTarjeta();
         mostrarTarjetas(usuario.getOperaciones());
         crearTarjetaInfoAdicional(usuario.getOperaciones());
     }
@@ -285,27 +293,15 @@ function checkLocalStorage() {
             o = Object.assign(new Operacion(m));
             usuario.agregarOperacion(o);
         });
+        blue = localStorage.getItem("blue");
+        usdOficial = localStorage.getItem("usdOficial");
         console.log("Data existente:", usuario);
+        console.log("Data existente:", blue, usdOficial);
         return true;
     } else {
         return false;
     }
 }
-
-/**
- * Manejar el reset
- */
-// const handleReset = () => {
-//     inputBuscarMes.value = "";
-//     inputFiltroAnio.value = "";
-
-//     // Remove the reset button
-//     const resetButton = document.getElementById("resetButton");
-//     if (resetButton) {
-//         resetButton.remove();
-//     }
-// };
-
 
 
 /**
@@ -350,9 +346,9 @@ buttonsContainer.addEventListener("click", (event) => {
     }
 });
 
+//////////////////// 4ta parte o entrega final
 
 //funcion asincrona + fetch con funciones "flecha"
-
 const obtenerDatos = async (url) => {
     try {
         const response = await fetch(url);
@@ -369,6 +365,10 @@ const obtenerDatos = async (url) => {
 obtenerDatos(URL_COTIZACIONES)
     .then((datos) => {
         misCotizaciones = datos;
+        blue = misCotizaciones.blue.value_sell;
+        usdOficial = misCotizaciones.oficial.value_sell;
+        localStorage.setItem('blue', JSON.stringify(misCotizaciones.blue.value_sell));
+        localStorage.setItem('usdOficial', JSON.stringify(misCotizaciones.oficial.value_sell));
     })
     .catch((error) => {
         console.error('Error al obtener los datos:', error.message);
