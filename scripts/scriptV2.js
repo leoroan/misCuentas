@@ -97,57 +97,51 @@ button.addEventListener('click', function (e) {
     let cardInicial = document.getElementById("cardInicial");
     const selectedRadio = document.querySelector('input[name="metodo"]:checked');
 
-    // Validation 1: Check the 'montoInput' and mark as invalid if it fails
-if (checkMonto(montoInput.value)) {
-    montoInput.classList.add("is-invalid");
-    montoInput.classList.remove("is-valid");
-}else{
-    montoInput.classList.remove("is-invalid");
-    montoInput.classList.add("is-valid");
-}
+    // Validacion monto
+    if (checkMonto(montoInput.value)) {
+        montoInput.classList.add("is-invalid");
+        montoInput.classList.remove("is-valid");
+    } else {
+        montoInput.classList.remove("is-invalid");
+        montoInput.classList.add("is-valid");
+    }
 
-// Validation 2: Check the 'plazoInput' and mark as invalid if it fails
-if (checkPlazo(plazoInput.value)) {
-    plazoInput.classList.add("is-invalid");
-    plazoInput.classList.remove("is-valid");
-}else{
-    plazoInput.classList.remove("is-invalid");
-    plazoInput.classList.add("is-valid");
-}
+    // Validacion plazo
+    if (checkPlazo(plazoInput.value)) {
+        plazoInput.classList.add("is-invalid");
+        plazoInput.classList.remove("is-valid");
+    } else {
+        plazoInput.classList.remove("is-invalid");
+        plazoInput.classList.add("is-valid");
+    }
 
-// Validation 3: Check if 'selectedRadio' is not selected and mark as invalid if it fails
-if (!selectedRadio) {
-    radioInput.classList.add("is-invalid");
-    radioInput.classList.add("is-valid");
-}else{
-    radioInput.classList.remove("is-invalid");
-    radioInput.classList.add("is-valid");
-}
+    // Validacion opcionRadio
+    if (!selectedRadio) {
+        radioInput.classList.add("is-invalid");
+    } else {
+        radioInput.classList.remove("is-invalid");
+    }
 
-// If any of the validations failed, don't proceed further
-if (checkMonto(montoInput.value) || checkPlazo(plazoInput.value) || !selectedRadio) {
-    // Display an error message or take appropriate action
-    // ...
-} else {
-    // All validations passed, proceed to calculate and display results
+    if (checkMonto(montoInput.value) || checkPlazo(plazoInput.value) || !selectedRadio) {
+        Swal.fire('Quedaron campos erróneos o incompletos!')
+    } else {
+        cardBienvenida.classList.add('hide');
+        cardInicial.classList.add('hide');
+        cardResultDisplay.style.display = 'block';
 
-    cardBienvenida.classList.add('hide');
-    cardInicial.classList.add('hide');
-    cardResultDisplay.style.display = 'block';
+        aInvertir();
+        usuario.calcularRetorno(metodo);
+        usuario.saveToLocalStorage();
 
-    aInvertir();
-    usuario.calcularRetorno(metodo);
-    usuario.saveToLocalStorage();
+        const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
+        const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
 
-    const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
-    const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
-    
-    cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
+        cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
                                <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n`;
 
-    mostrarTarjetas(usuario.getOperaciones());
-    crearTarjetaInfoAdicional(usuario.getOperaciones());
-}
+        mostrarTarjetas(usuario.getOperaciones());
+        crearTarjetaInfoAdicional(usuario.getOperaciones());
+    }
 });
 
 function crearTarjeta(op) {
