@@ -112,10 +112,10 @@
                                             <input class="form-control-card" value="" id="montoInput" type="number"
                                                 name="monto" required autofocus><br>
                                             <div class="invalid-feedback">
-                                                El monto ingresado no puede ser 0 ni menor.
+                                                El monto ingresado no puede ser 0 ni menor, ni estar en blanco.
                                             </div>
                                             <div class="valid-feedback">
-                                                ok.
+                                                El valor es válido.
                                             </div>
                                         </div>
 
@@ -127,7 +127,7 @@
                                                 El plazo no puede ser menor a 1 mes ni mayor a 36 meses.
                                             </div>
                                             <div class="valid-feedback">
-                                                ok.
+                                                El plazo es correcto.
                                             </div>
                                         </div>
 
@@ -140,7 +140,7 @@
 
                         <div class="col-md-4 animate__animated animate__bounce">
                             <div class="card border-light bg-transparent lateral">
-                                <div class="card-body">
+                                <div class="card-body needs-validation">
                                     <h4 class="card-title"> ¿Qué método de inversion preferís? </h4>
                                     <div class="d-flex flex-row-reverse justify-content-end" id="radioOptionCard">
                                         <label class="mx-3" for="radio1"> Interes Compuesto</label>

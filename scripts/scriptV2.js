@@ -81,8 +81,8 @@ radioButtons.forEach(function (radioButton) {
     });
 });
 
-function checkMonto(unValor) {
-    return unValor === 0;
+function checkMonto(valor) {
+    return (valor <= 0 || valor.trim() === "");
 }
 function checkPlazo(unValor) {
     return (unValor <= 0 || unValor > 36);
@@ -97,25 +97,57 @@ button.addEventListener('click', function (e) {
     let cardInicial = document.getElementById("cardInicial");
     const selectedRadio = document.querySelector('input[name="metodo"]:checked');
 
-    if (checkMonto(montoInput.value) || checkPlazo(plazoInput.value) || !selectedRadio) {
-        montoInput.classList.add("is-invalid");
-        plazoInput.classList.add("is-invalid");
-        radioInput.classList.add("is-invalid");
-    } else {
-        cardBienvenida.classList.add('hide');
-        cardInicial.classList.add('hide');
-        cardResultDisplay.style.display = 'block';
-        aInvertir();
-        usuario.calcularRetorno(metodo);
-        usuario.saveToLocalStorage();
-        const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
-        const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
-        cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
-                                   <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n
-                                  `;
-        mostrarTarjetas(usuario.getOperaciones());
-        crearTarjetaInfoAdicional(usuario.getOperaciones());
-    }
+    // Validation 1: Check the 'montoInput' and mark as invalid if it fails
+if (checkMonto(montoInput.value)) {
+    montoInput.classList.add("is-invalid");
+    montoInput.classList.remove("is-valid");
+}else{
+    montoInput.classList.remove("is-invalid");
+    montoInput.classList.add("is-valid");
+}
+
+// Validation 2: Check the 'plazoInput' and mark as invalid if it fails
+if (checkPlazo(plazoInput.value)) {
+    plazoInput.classList.add("is-invalid");
+    plazoInput.classList.remove("is-valid");
+}else{
+    plazoInput.classList.remove("is-invalid");
+    plazoInput.classList.add("is-valid");
+}
+
+// Validation 3: Check if 'selectedRadio' is not selected and mark as invalid if it fails
+if (!selectedRadio) {
+    radioInput.classList.add("is-invalid");
+    radioInput.classList.add("is-valid");
+}else{
+    radioInput.classList.remove("is-invalid");
+    radioInput.classList.add("is-valid");
+}
+
+// If any of the validations failed, don't proceed further
+if (checkMonto(montoInput.value) || checkPlazo(plazoInput.value) || !selectedRadio) {
+    // Display an error message or take appropriate action
+    // ...
+} else {
+    // All validations passed, proceed to calculate and display results
+
+    cardBienvenida.classList.add('hide');
+    cardInicial.classList.add('hide');
+    cardResultDisplay.style.display = 'block';
+
+    aInvertir();
+    usuario.calcularRetorno(metodo);
+    usuario.saveToLocalStorage();
+
+    const fomatoMoney2 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(usuario.calcularRetorno(metodo));
+    const fomatoMoney3 = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(usuario.calcularRetorno(metodo)) + Number(usuario.operaciones[0].getMes().getInversion()));
+    
+    cardOptiones.innerHTML += `<br> RETORNO DE INTERESES: ${fomatoMoney2}
+                               <br> RETORNO TOTAL: (INV + INT) ${fomatoMoney3}\n`;
+
+    mostrarTarjetas(usuario.getOperaciones());
+    crearTarjetaInfoAdicional(usuario.getOperaciones());
+}
 });
 
 function crearTarjeta(op) {
@@ -262,7 +294,6 @@ function checkLocalStorage() {
         console.log("Data existente:", usuario);
         return true;
     } else {
-        console.log("LocalStorage está vacío");
         return false;
     }
 }
@@ -326,30 +357,26 @@ buttonsContainer.addEventListener("click", (event) => {
 });
 
 
+//funcion asincrona + fetch con funciones "flecha"
 
-async function obtenerDatos(url) {
+const obtenerDatos = async (url) => {
     try {
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error('No se pudo obtener la información');
         }
-        const datos = await response.json();
-        return datos;
+        return await response.json();
     } catch (error) {
         console.error('Error al obtener los datos:', error.message);
         return null;
     }
-}
+};
 
 obtenerDatos(URL_COTIZACIONES)
-    .then(datos => {
-        if (datos) {
-            misCotizaciones = datos;
-        } else {
-            console.log('No se pudo obtener la información.');
-        }
+    .then((datos) => {
+        misCotizaciones = datos;
     })
-    .catch(error => {
+    .catch((error) => {
         console.error('Error al obtener los datos:', error.message);
     });
 
